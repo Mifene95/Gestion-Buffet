@@ -59,7 +59,9 @@ include '../inc/layout/sidebar.php';
                                             <label>Mesa</label>
                                             <select name="mesa_id" class="form-control">
                                                 <option value="1">Platos Calientes</option>
-                                                <option value="2">Ensaladas</option>
+                                                <option value="2">Platos Frios</option>
+                                                <option value="3">Ensaladas</option>
+                                                <option value="4">Postres</option>
                                             </select>
                                         </div>
                                     </div>
@@ -67,6 +69,32 @@ include '../inc/layout/sidebar.php';
                                         <div class="form-group">
                                             <label>Posición</label>
                                             <input type="text" name="posicion" class="form-control" placeholder="Ej: 03">
+                                        </div>
+                                    </div>
+                                    <div class="card card-warning card-outline">
+                                        <div class="card-header">
+                                            <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Alérgenos</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <?php
+                                                $lista_alergenos = [
+                                                    1 => 'Gluten',
+                                                    2 => 'Lácteos',
+                                                    3 => 'Huevos',
+                                                    4 => 'Pescado',
+                                                    5 => 'Crustáceos',
+                                                    6 => 'Frutos Secos',
+                                                ];
+                                                foreach ($lista_alergenos as $id => $nombre) : ?>
+                                                    <div class="col-md-3 col-sm-6 mb-2">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox" name="alergenos[]" id="alergeno_<?= $id ?>" value="<?= $id ?>">
+                                                            <label for="alergeno_<?= $id ?>" class="custom-control-label"><?= $nombre ?></label>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
