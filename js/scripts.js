@@ -26,9 +26,12 @@ $('#formNuevoPlato').submit(function(e){
             }else{
                 Swal.fire({
                     title: "Error",
-                    text: "Hubo un problema: " + respuesta,
+                    text: "Hubo un error al crear un plato",
                     icon: "error"
-                })
+                });
+
+                console.error("Detalle tecnico del error", respuesta)
+
             }
         }
     })
