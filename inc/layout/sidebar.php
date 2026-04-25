@@ -33,6 +33,12 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="tabla_platos.php" class="nav-link <?= ($pagina_actual == 'tabla_platos.php') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-th-list"></i>
+                        <p>Tabla de Platos</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
