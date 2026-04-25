@@ -76,6 +76,31 @@ include '../inc/layout/sidebar.php';
                             </div>
                         </div>
 
+                        <div class="card card-success card-outline ">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas"></i> Turno</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <?php
+                                    $lista_turno = [
+                                        1 => 'Desayuno',
+                                        2 => 'Comida',
+                                        3 => 'Cena',
+
+                                    ];
+                                    foreach ($lista_turno as $id => $nombre) : ?>
+                                        <div class="col-md-3 col-sm-6 mb-2">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="turno[]" id="turno_<?= $id ?>" value="<?= $id ?>">
+                                                <label for="turno_<?= $id ?>" class="custom-control-label"><?= $nombre ?></label>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card card-info card-outline ">
                             <div class="card-header">
                                 <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Alérgenos</h3>
@@ -102,6 +127,7 @@ include '../inc/layout/sidebar.php';
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="row pb-5">
                             <div class="col-12 text-right">

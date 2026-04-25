@@ -80,7 +80,8 @@ include "../inc/layout/sidebar.php";
             {
                 field: "turno",
                 headerName: "Turno",
-                filter: true
+                filter: true,
+                editable: true
             },
             {
                 field: "posicion",

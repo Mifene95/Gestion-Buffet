@@ -28,6 +28,16 @@ if ($_POST) {
                 $stmtA->execute([$plato_id, $alergeno_id]);
             }
         }
+
+        //Insertamos el turno 
+        if (isset($_POST['turno']) && is_array($_POST['turno'])) {
+            $stmtT = $pdo->prepare('INSERT into plato_turnos (plato_id, turno_id) VALUES (?,?)');
+
+            foreach ($_POST['turno'] as $turno_id) {
+                $stmtT->execute([$plato_id, $turno_id,]);
+            }
+        }
+
         $pdo->commit();
 
         if ($resultado) {
