@@ -1,8 +1,10 @@
 <?php
 
-session_start();
+
 
 require '../inc/db.php';
+require '../inc/auth_check.php';
+validar_acceso([1, 2]);
 
 include '../inc/layout/header.php';
 include '../inc/layout/sidebar.php';

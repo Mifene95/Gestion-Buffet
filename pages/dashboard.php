@@ -1,11 +1,9 @@
 <?php
-session_start();
 require '../inc/db.php';
+require '../inc/auth_check.php';
+validar_acceso([1, 2]);
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../index.php");
-    exit();
-}
+
 
 // Consultas para las tarjetas
 $total_platos = $pdo->query("SELECT COUNT(*) FROM platos")->fetchColumn();

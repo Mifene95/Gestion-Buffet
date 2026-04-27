@@ -1,8 +1,9 @@
 <?php
-session_start();
 require "../inc/db.php";
 include "../inc/layout/header.php";
 include "../inc/layout/sidebar.php";
+require '../inc/auth_check.php';
+validar_acceso([1, 2]);
 ?>
 
 <div class="content-wrapper">
