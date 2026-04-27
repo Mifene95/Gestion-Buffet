@@ -59,11 +59,15 @@ include '../inc/layout/sidebar.php';
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Mesa</label>
+                                            <?php
+                                            $mesas = $pdo->query("SELECT id, nombre FROM mesas")->fetchAll(PDO::FETCH_ASSOC);
+                                            ?>
                                             <select name="mesa_id" class="form-control">
-                                                <option value="1">Platos Calientes</option>
-                                                <option value="2">Platos Frios</option>
-                                                <option value="3">Ensaladas</option>
-                                                <option value="4">Postres</option>
+                                                <?php
+                                                foreach ($mesas as $mesa) {
+                                                    echo '<option value="' . $mesa['id'] . '">' . $mesa['nombre'] . '</option>';
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
@@ -85,17 +89,12 @@ include '../inc/layout/sidebar.php';
                             <div class="card-body">
                                 <div class="row">
                                     <?php
-                                    $lista_turno = [
-                                        1 => 'Desayuno',
-                                        2 => 'Comida',
-                                        3 => 'Cena',
-
-                                    ];
-                                    foreach ($lista_turno as $id => $nombre) : ?>
+                                    $lista_turno = $pdo->query('SELECT id, nombre from turnos')->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($lista_turno as $turno) : ?>
                                         <div class="col-md-3 col-sm-6 mb-2">
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input" type="checkbox" name="turno[]" id="turno_<?= $id ?>" value="<?= $id ?>">
-                                                <label for="turno_<?= $id ?>" class="custom-control-label"><?= $nombre ?></label>
+                                                <input class="custom-control-input" type="checkbox" name="turno[]" id="turno_<?= $turno['id'] ?>" value="<?= $turno['id'] ?>">
+                                                <label for="turno_<?= $turno['id'] ?>" class="custom-control-label"><?= $turno['nombre'] ?></label>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>

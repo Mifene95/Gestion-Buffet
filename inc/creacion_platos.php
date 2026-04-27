@@ -15,7 +15,7 @@ if ($_POST) {
         //Transaccion all in o nada
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare('INSERT into platos (nombre_es, nombre_en, nombre_fr, mesa, posicion) VALUES(?,?,?,?,?)');
+        $stmt = $pdo->prepare('INSERT into platos (nombre_es, nombre_en, nombre_fr, mesa_id, posicion) VALUES(?,?,?,?,?)');
         $resultado = $stmt->execute([$nombre_es, $nombre_en, $nombre_fr, $mesa_id, $posicion]);
 
         $plato_id = $pdo->lastInsertId();
