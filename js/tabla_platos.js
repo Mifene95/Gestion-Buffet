@@ -49,7 +49,7 @@ const gridOptions = {
     },
     ],
 
-    onRowClicked: function(evento){
+    onCellClicked: function(evento){
         const nombrePlato = evento.data.nombre_es;
         const turnosActuales = evento.data.turnos;
         const platoId = evento.data.id;
@@ -77,8 +77,10 @@ const gridOptions = {
         });
         
         $('#checkboxesTurnos').html('<div class="row">' + checkboxesHTML + '</div>');
+        if (evento.colDef.field === 'turnos') {
+    $('#modalTurnos').modal('show');
+    }
         
-        $('#modalTurnos').modal('show');
     },
 
     pagination: true,
@@ -129,9 +131,13 @@ $(window).on('load', function() {
                 turnos: turnosSeleccionados
             },
 
-            success: function(respuesta){
-                if(respuesta === "ok"){
+
+                success: function(respuesta){
+    console.log('Respuesta raw:', JSON.stringify(respuesta));
+    console.log('Después trim:', JSON.stringify(respuesta.trim()));
+                if(respuesta.trim() === "ok"){
                     cargar_platos();
+                    $('#modalTurnos').modal('hide');
                 Swal.fire({
                     title: "¡Turno actualizado!",
                     text: "Se actualizo el turno",
@@ -145,7 +151,10 @@ $(window).on('load', function() {
                     icon: "error"
                 });
             }
-        }
+        },
+        error: function(xhr, status, error) {
+        console.log('Error completo:', xhr.responseText);
+    }
         })
     })
 

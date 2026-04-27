@@ -38,6 +38,10 @@ $('#formNuevoPlato').submit(function(e){
 
 });
 
-    
+    $('.toggle-password').click(function() {
+    const target = $($(this).data('target'));
+    const type = target.attr('type') === 'password' ? 'text' : 'password';
+    target.attr('type', type);
+});
 
 });

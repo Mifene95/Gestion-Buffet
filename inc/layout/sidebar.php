@@ -39,6 +39,13 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                         <p>Tabla de Platos</p>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="crear_usuario.php" class="nav-link <?= ($pagina_actual == 'crear_usuario.php') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-user-plus"></i>
+                        <p>Crear usuario</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
