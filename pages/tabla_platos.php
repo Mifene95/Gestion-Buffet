@@ -32,7 +32,33 @@ include "../inc/layout/sidebar.php";
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalTurnos">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editar Turnos</h4>
+                </div>
+                <div class="modal-body">
+                    <h5 id="nombrePlatoModal" class="mb-4 modal-title"></h5>
+
+                    <div class="form-group">
+                        <label>Turno</label>
+                        <div id="checkboxesTurnos">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarTurnos">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
-<script src="../js/tabla_platos.js"></script>
 <?php include "../inc/layout/footer.php"; ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/tabla_platos.js"></script>

@@ -109,19 +109,12 @@ include '../inc/layout/sidebar.php';
                             <div class="card-body">
                                 <div class="row">
                                     <?php
-                                    $lista_alergenos = [
-                                        1 => 'Gluten',
-                                        2 => 'Lácteos',
-                                        3 => 'Huevos',
-                                        4 => 'Pescado',
-                                        5 => 'Crustáceos',
-                                        6 => 'Frutos Secos',
-                                    ];
-                                    foreach ($lista_alergenos as $id => $nombre) : ?>
+                                    $lista_alergenos = $pdo->query('SELECT id, nombre FROM alergenos')->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($lista_alergenos as $alergenos) : ?>
                                         <div class="col-md-3 col-sm-6 mb-2">
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input" type="checkbox" name="alergenos[]" id="alergeno_<?= $id ?>" value="<?= $id ?>">
-                                                <label for="alergeno_<?= $id ?>" class="custom-control-label"><?= $nombre ?></label>
+                                                <input class="custom-control-input" type="checkbox" name="alergenos[]" id="alergeno_<?= $alergenos['id'] ?>" value="<?= $alergenos['id'] ?>">
+                                                <label for="alergeno_<?= $alergenos['id'] ?>" class="custom-control-label"><?= $alergenos['nombre'] ?></label>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>

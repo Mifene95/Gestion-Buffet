@@ -11,6 +11,7 @@ header('Content-Type: application/json');
 
 $stmt = $pdo->prepare("
     SELECT 
+    platos.id,
     platos.nombre_es, 
     platos.nombre_en, 
     platos.nombre_fr,  
