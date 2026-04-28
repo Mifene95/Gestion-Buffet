@@ -3,6 +3,7 @@ const gridOptions = {
     columnDefs: [{
         field: "id",
         headerName: "ID",
+        width: 100,
         filter: true,
         sortable: true,
     },

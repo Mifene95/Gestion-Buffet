@@ -48,12 +48,27 @@ const gridOptions = {
         editable: true
     },
     {
-        headerName: "Acciones",
-        field: "id",
-        width: 150,
-        sortable: false,
-        filter: false,
-        cellRenderer: function(params) {
+    headerName: "Acciones",
+    field: "id",
+    width: 200,
+    sortable: false,
+    filter: false,
+    cellRenderer: function(params) {
+        // Si es Admin (Rol 1)
+        if (ROL_USUARIO === 1) {
+            return `
+                <div style="display: flex; gap: 5px;">
+                <a href"" class="btn btn-sm btn-primary edit-admin" data-plato-id="${params.data.id}">
+                    <i class="fas fa-tools"></i> Editar
+                </a>
+                <a data-usuario-id="${params.data.id}" class="btn btn-sm btn-danger borrar-usuario">
+                    <i class="fas fa-trash"></i> Borrar
+                </a>
+                </div>
+            `;
+        } 
+        // Si es Usuario (u otro rol)
+        else {
             return `
                 <button class="btn btn-sm btn-primary edit-plato" data-plato-id="${params.data.id}" data-plato-nombre="${params.data.nombre_es}" data-plato-turnos="${params.data.turnos || ''}">
                     <i class="fas fa-edit"></i> Editar Turno
@@ -61,6 +76,7 @@ const gridOptions = {
             `;
         }
     }
+}
     ],
     pagination: true,
     paginationPageSize: 10,

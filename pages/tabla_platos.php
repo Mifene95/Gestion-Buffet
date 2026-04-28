@@ -75,6 +75,9 @@ include "../inc/layout/sidebar.php";
             </div>
         </div>
     </div>
+    <script>
+        const ROL_USUARIO = <?php echo $_SESSION['role_id']; ?>;
+    </script>
 </div>
 <?php include "../inc/layout/footer.php"; ?>
 <script src="../js/tabla_platos.js"></script>
