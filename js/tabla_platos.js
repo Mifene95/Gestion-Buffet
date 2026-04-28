@@ -56,7 +56,7 @@ const gridOptions = {
         cellRenderer: function(params) {
             return `
                 <button class="btn btn-sm btn-primary edit-plato" data-plato-id="${params.data.id}" data-plato-nombre="${params.data.nombre_es}" data-plato-turnos="${params.data.turnos || ''}">
-                    <i class="fas fa-edit"></i> Editar
+                    <i class="fas fa-edit"></i> Editar Turno
                 </button>
             `;
         }
