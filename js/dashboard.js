@@ -103,4 +103,39 @@ $(document).ready(function() {
             }
         }
     });
+
+    // Gráfico alérgenos más comunes
+
+let alergenos_labels = [];
+let alergenos_valores = [];
+
+alergenos_data.forEach(alergeno => {
+    alergenos_labels.push(alergeno.nombre);
+    alergenos_valores.push(alergeno.total);
+});
+
+const ctx_alergenos = document.getElementById('chartAlergenos');
+const chart_alergenos = new Chart(ctx_alergenos, {
+    type: 'bar',
+    data: {
+        labels: alergenos_labels,
+        datasets: [{
+            label: 'Cantidad de Platos',
+            data: alergenos_valores,
+            backgroundColor: '#FF6384',
+            borderColor: '#fff',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
 });

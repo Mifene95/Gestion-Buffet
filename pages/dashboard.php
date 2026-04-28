@@ -45,28 +45,44 @@ $stmt_cambios_dia = $pdo->prepare("
 $stmt_cambios_dia->execute();
 $cambios_por_dia = $stmt_cambios_dia->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta cambios con detalles (últimos 7 días)
-$stmt_cambios = $pdo->prepare("
+// Consulta cambios con detalles - con paginación
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$por_pagina = 10;
+$offset = ($pagina - 1) * $por_pagina;
+
+// Contar total
+$stmt_total = $pdo->query("SELECT COUNT(*) FROM logs_cambios");
+$total_registros = $stmt_total->fetchColumn();
+$total_paginas = ceil($total_registros / $por_pagina);
+
+$sql = "
     SELECT 
         lc.id,
         lc.fecha,
         lc.accion,
         u.username,
-        p.nombre_es as plato_nombre,
-        t.nombre as turno_nombre,
-        a.nombre as alergeno_nombre
+        p.nombre_es as plato_nombre
     FROM logs_cambios lc
     LEFT JOIN usuarios u ON lc.usuario_id = u.id
     LEFT JOIN platos p ON lc.plato_id = p.id
-    LEFT JOIN turnos t ON lc.turno_id = t.id
-    LEFT JOIN alergenos a ON lc.alergeno_id = a.id
-    WHERE lc.fecha >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     ORDER BY lc.fecha DESC
-    LIMIT 100
-");
-$stmt_cambios->execute();
+    LIMIT $por_pagina OFFSET $offset
+";
+$stmt_cambios = $pdo->query($sql);
 $cambios_detallados = $stmt_cambios->fetchAll(PDO::FETCH_ASSOC);
 
+
+// Consulta alérgenos más asignados
+$stmt_alergenos_top = $pdo->prepare("
+    SELECT a.nombre, COUNT(*) as total
+    FROM plato_alergenos pa
+    LEFT JOIN alergenos a ON pa.alergeno_id = a.id
+    GROUP BY pa.alergeno_id
+    ORDER BY total DESC
+    LIMIT 4
+");
+$stmt_alergenos_top->execute();
+$alergenos_top = $stmt_alergenos_top->fetchAll(PDO::FETCH_ASSOC);
 
 include '../inc/layout/header.php';
 include '../inc/layout/sidebar.php';
@@ -175,14 +191,15 @@ include '../inc/layout/sidebar.php';
                 </div>
             </div>
             <!-- FILA 5: Cambios por día -->
+            <!-- FILA 6: Gráfico alérgenos más comunes -->
             <div class="row mt-3">
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Cambios Realizados (Últimos 7 días)</h3>
+                            <h3 class="card-title"><i class="fas fa-bar-chart mr-2"></i>Alérgenos Más Comunes</h3>
                         </div>
                         <div class="card-body">
-                            <canvas id="chartCambios"></canvas>
+                            <canvas id="chartAlergenos"></canvas>
                         </div>
                     </div>
                 </div>
@@ -216,17 +233,46 @@ include '../inc/layout/sidebar.php';
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+                            </table>
+
+                            <!-- Paginación -->
+                            <nav aria-label="Page navigation" class="mt-3">
+                                <ul class="pagination justify-content-center">
+                                    <?php if ($pagina > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?pagina=<?php echo $pagina - 1; ?>">Anterior</a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                        <li class="page-item <?php echo ($i == $pagina) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php if ($pagina < $total_paginas): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>">Siguiente</a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+</div>
+</div>
+</div>
+</div>
+</section>
 </div>
 
 <script>
     const mesasData = <?php echo json_encode($mesas); ?>;
     const cambiosData = <?php echo json_encode($cambios_por_dia); ?>;
+    const alergenos_data = <?php echo json_encode($alergenos_top); ?>;
 </script>
 
 <?php include '../inc/layout/footer.php'; ?>
