@@ -11,6 +11,17 @@ if (!$plato_id) {
     exit();
 }
 
+// Consultar todos los alérgenos
+$stmt_alergenos = $pdo->query("SELECT * FROM alergenos");
+$todos_alergenos = $stmt_alergenos->fetchAll(PDO::FETCH_ASSOC);
+
+// Alérgenos asignados al plato actual
+$stmt_plato_alergenos = $pdo->prepare("
+    SELECT alergeno_id FROM plato_alergenos WHERE plato_id = ?
+");
+$stmt_plato_alergenos->execute([$plato_id]);
+$alergenos_asignados = $stmt_plato_alergenos->fetchAll(PDO::FETCH_COLUMN);
+
 //  Consultar el plato con sus turnos_ids concatenados
 $stmt = $pdo->prepare('
     SELECT p.*, GROUP_CONCAT(pt.turno_id) as turnos_ids 
@@ -116,6 +127,28 @@ include '../inc/layout/sidebar.php';
                                                                     <?= in_array($turno['id'], $turnos_activos) ? 'checked' : '' ?>>
                                                                 <label class="custom-control-label" for="turno_<?= $turno['id'] ?>">
                                                                     <?= $turno['nombre'] ?>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="d-block">Alérgenos</label>
+                                            <div class="p-3 border rounded bg-light">
+                                                <div class="row">
+                                                    <?php foreach ($todos_alergenos as $alergeno): ?>
+                                                        <div class="col-md-4 ">
+                                                            <div class="custom-control custom-checkbox ">
+                                                                <input class="custom-control-input" type="checkbox" name="alergenos[]"
+                                                                    id="alergeno_<?= $alergeno['id'] ?>"
+                                                                    value="<?= $alergeno['id'] ?>"
+                                                                    <?= in_array($alergeno['id'], $alergenos_asignados) ? 'checked' : '' ?>>
+                                                                <label class="custom-control-label" for="alergeno_<?= $alergeno['id'] ?>">
+                                                                    <?= htmlspecialchars($alergeno['nombre']) ?>
                                                                 </label>
                                                             </div>
                                                         </div>

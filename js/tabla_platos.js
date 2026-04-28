@@ -30,7 +30,7 @@ const gridOptions = {
         field: "alergenos",
         headerName: "Alergenos",
         filter: true,
-        sortable: true,
+        sortable: true
     },
     {
         field: "mesa",

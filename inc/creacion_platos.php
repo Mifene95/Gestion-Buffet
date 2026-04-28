@@ -39,6 +39,9 @@ if ($_POST) {
         }
 
         $pdo->commit();
+        // Registrar creación del plato
+        $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
+        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Creó plato: ' . $nombre_es]);
 
         if ($resultado) {
             echo 'ok';
