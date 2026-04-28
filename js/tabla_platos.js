@@ -47,42 +47,21 @@ const gridOptions = {
         filter: true,
         editable: true
     },
-    ],
-
-    onCellClicked: function(evento){
-        const nombrePlato = evento.data.nombre_es;
-        const turnosActuales = evento.data.turnos;
-        const platoId = evento.data.id;
-        
-        const turnosIds = turnosActuales 
-            ? turnosActuales.split(', ').map(nombreTurno => 
-                turnos.find(t => t.nombre === nombreTurno).id
-            )
-            : [];
-        
-        $('#nombrePlatoModal').text(nombrePlato);
-        $('#btnGuardarTurnos').data('plato-id', platoId);
-        
-        let checkboxesHTML = '';
-        turnos.forEach(turno => {
-            const checked = turnosIds.includes(turno.id) ? 'checked' : '';
-            checkboxesHTML += `<div class="col-md-4 col-sm-6 mb-2">
-                <div class="custom-control custom-checkbox">
-                    <input class="custom-control-input" type="checkbox" name="turno_modal[]" id="turno_${turno.id}" value="${turno.id}" ${checked}>
-                    <label class="custom-control-label" for="turno_${turno.id}">
-                        ${turno.nombre}
-                    </label>
-                </div>
-            </div>`;
-        });
-        
-        $('#checkboxesTurnos').html('<div class="row">' + checkboxesHTML + '</div>');
-        if (evento.colDef.field === 'turnos') {
-    $('#modalTurnos').modal('show');
+    {
+        headerName: "Acciones",
+        field: "id",
+        width: 150,
+        sortable: false,
+        filter: false,
+        cellRenderer: function(params) {
+            return `
+                <button class="btn btn-sm btn-primary edit-plato" data-plato-id="${params.data.id}" data-plato-nombre="${params.data.nombre_es}" data-plato-turnos="${params.data.turnos || ''}">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+            `;
+        }
     }
-        
-    },
-
+    ],
     pagination: true,
     paginationPageSize: 10,
     paginationPageSizeSelector: [10, 20, 50, 100]
@@ -115,13 +94,42 @@ $(window).on('load', function() {
         gridApi.setColumnsVisible([idioma], true);
     });
 
+    $(document).on('click', '.edit-plato', function(){
+        const platoId = $(this).data('plato-id');
+        const nombrePlato = $(this).data('plato-nombre');
+        const turnosActuales = $(this).data('plato-turnos');
+        
+        const turnosIds = turnosActuales 
+            ? turnosActuales.split(', ').map(nombreTurno => 
+                turnos.find(t => t.nombre === nombreTurno).id
+            )
+            : [];
+        
+        $('#nombrePlatoModal').text(nombrePlato);
+        $('#btnGuardarTurnos').data('plato-id', platoId);
+        
+        let checkboxesHTML = '';
+        turnos.forEach(turno => {
+            const checked = turnosIds.includes(turno.id) ? 'checked' : '';
+            checkboxesHTML += `<div class="col-md-4 col-sm-6 mb-2">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" name="turno_modal[]" id="turno_${turno.id}" value="${turno.id}" ${checked}>
+                    <label class="custom-control-label" for="turno_${turno.id}">
+                        ${turno.nombre}
+                    </label>
+                </div>
+            </div>`;
+        });
+        
+        $('#checkboxesTurnos').html('<div class="row">' + checkboxesHTML + '</div>');
+        $('#modalTurnos').modal('show');
+    });
+
     $('#btnGuardarTurnos').click(function(){
         let platoId = $(this).data('plato-id');
         let turnosSeleccionados = $('input[name="turno_modal[]"]:checked').map(function() {
-        return $(this).val();
-    }).get();
-        console.log(platoId);
-        console.log(turnosSeleccionados);
+            return $(this).val();
+        }).get();
 
         $.ajax({
             url: '../inc/guardar_turnos.php',
@@ -130,30 +138,24 @@ $(window).on('load', function() {
                 plato_id: platoId,
                 turnos: turnosSeleccionados
             },
-
-
-                success: function(respuesta){
+            success: function(respuesta){
                 if(respuesta.trim() === "ok"){
                     cargar_platos();
                     $('#modalTurnos').modal('hide');
-                Swal.fire({
-                    title: "¡Turno actualizado!",
-                    text: "Se actualizo el turno",
-                    icon: "success",
-                    confirmButtonText: "Genial"
-                });
-            }else{
-                Swal.fire({
-                    title: "Error",
-                    text: "Hubo un error al actualizar el plato",
-                    icon: "error"
-                });
+                    Swal.fire({
+                        title: "¡Turno actualizado!",
+                        text: "Se actualizo el turno",
+                        icon: "success",
+                        confirmButtonText: "Genial"
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Error",
+                        text: "Hubo un error al actualizar el plato",
+                        icon: "error"
+                    });
+                }
             }
-        },
-        error: function(xhr, status, error) {
-        console.log('Error completo:', xhr.responseText);
-    }
         })
     })
-
 });
