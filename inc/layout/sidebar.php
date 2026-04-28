@@ -26,33 +26,38 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="crear_plato.php" class="nav-link <?= ($pagina_actual == 'crear_plato.php') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-utensils"></i>
-                        <p>Gestión de Platos</p>
-                    </a>
-                </li>
+                <?php if ($_SESSION['role_id'] == 1): ?>
+                    <li class="nav-item">
+                        <a href="crear_plato.php" class="nav-link <?= ($pagina_actual == 'crear_plato.php') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-utensils"></i>
+                            <p>Crear Platos</p>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
                 <li class="nav-item">
                     <a href="tabla_platos.php" class="nav-link <?= ($pagina_actual == 'tabla_platos.php') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-th-list"></i>
-                        <p>Tabla de Platos</p>
+                        <p>Gestionar Platos</p>
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="crear_usuario.php" class="nav-link <?= ($pagina_actual == 'crear_usuario.php') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-user-plus"></i>
-                        <p>Crear usuario</p>
-                    </a>
-                </li>
+                <?php if ($_SESSION['role_id'] == 1): ?>
+                    <li class="nav-item">
+                        <a href="crear_usuario.php" class="nav-link <?= ($pagina_actual == 'crear_usuario.php') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-user-plus"></i>
+                            <p>Crear usuario</p>
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a href="gestion_usuarios.php" class="nav-link <?= ($pagina_actual == 'gestion_usuarios.php') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Gestionar usuarios</p>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a href="gestion_usuarios.php" class="nav-link <?= ($pagina_actual == 'gestion_usuarios.php') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Gestionar usuarios</p>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
             </ul>
         </nav>
     </div>

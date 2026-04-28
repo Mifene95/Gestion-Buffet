@@ -1,7 +1,4 @@
 <?php
-
-
-
 require '../inc/db.php';
 require '../inc/auth_check.php';
 validar_acceso([1, 2]);
