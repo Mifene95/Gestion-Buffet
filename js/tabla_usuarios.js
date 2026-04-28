@@ -29,6 +29,25 @@ const gridOptions = {
         headerName: "Estado",
         filter: true
     },
+    {
+    headerName: "Acciones",
+    field: "id",
+    width: 200,
+    sortable: false,
+    filter: false,
+    cellRenderer: function(params) {
+        return `
+            <div style="display: flex; gap: 5px;">
+                <a href="editar_usuario.php?id=${params.data.id}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a id="${params.data.id}" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash"></i> Borrar
+                </a>
+            </div>
+        `;
+    }
+}
     ],
 
     pagination: true,

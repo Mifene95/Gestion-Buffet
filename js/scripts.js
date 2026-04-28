@@ -78,7 +78,7 @@ $('#formNuevoUsuario').submit(function(e){
                 });
                 $('#formNuevoUsuario')[0].reset();
             } else if (res === "pass_mismatch") {
-                // ESTA ES LA ALERTA QUE BUSCAS
+                
                 Swal.fire({
                     title: "Las contraseñas no coinciden",
                     text: "Por favor, asegúrate de escribir la misma contraseña en ambos campos.",
