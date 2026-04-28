@@ -11,17 +11,15 @@ const gridOptions = {
         headerName: "Username",
         filter: true,
         sortable: true,
-        hide: true,
     },
     {
         field: "email",
         headerName: "Email",
         filter: true,
         sortable: true,
-        hide: true,
     },
     {
-        field: "role_id",
+        field: "rol",
         headerName: "Rol",
         filter: true,
         sortable: true,
@@ -37,3 +35,23 @@ const gridOptions = {
     paginationPageSize: 10,
     paginationPageSizeSelector: [10, 20, 50, 100]
 };
+
+let gridApi;
+
+function cargar_usuarios(){
+    $.ajax({
+        url: '../inc/get_usuarios.php',
+        method: 'GET',
+        success: function(respuesta){
+            gridApi.setGridOption('rowData', respuesta);
+        }
+    });
+}
+
+$(document).ready(function() {
+    const gridDiv = document.querySelector('#myGrid');
+    if (gridDiv) {
+        gridApi = agGrid.createGrid(gridDiv, gridOptions);
+    }
+    cargar_usuarios();
+});
