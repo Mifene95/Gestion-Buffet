@@ -60,7 +60,7 @@ const gridOptions = {
                     <a href="editar_plato.php?id=${params.data.id}" class="btn btn-sm btn-primary">
                         <i class="fas fa-edit"></i> Editar
                     </a>
-                    <button class="btn btn-sm btn-danger borrar-plato" data-id="${params.data.id}">
+                    <button class="btn btn-sm btn-danger borrar-plato" data-id-plato="${params.data.id}">
                         <i class="fas fa-trash"></i> Borrar
                     </button>
                 </div>
@@ -171,5 +171,35 @@ $(window).on('load', function() {
             }
         })
     })
+
+    $(document).on('click', '.borrar-plato', function(e){
+    e.preventDefault();
+    const plato_id = $(this).data('id-plato');
+    console.log('Plato ID:', plato_id);
+
+    Swal.fire({
+        title: "¿Eliminar plato?",
+        text: "Esta accion no se puede deshacer",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar"
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            console.log('Enviando:', { plato_id: plato_id });
+            $.ajax({
+                url: '../inc/borrar_plato.php',
+                method: 'POST',
+                data: { plato_id: plato_id },
+                success: function(respuesta){
+                    console.log('Respuesta:', respuesta);
+                    if(respuesta.trim() === "ok") {
+                        Swal.fire("¡Eliminado!", "", "success");
+                        cargar_platos();
+                    }
+                }
+            }) 
+        }
+    })   
+})
 
 });
