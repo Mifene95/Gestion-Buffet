@@ -1,7 +1,13 @@
 <?php
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require('db.php');
 require('auth_check.php');
 validar_acceso([1]);
+
+
 
 header('Content-Type: application/json');
 
@@ -11,9 +17,10 @@ $stmt = $pdo->prepare('
         usuarios.username,
         usuarios.email,
         roles.nombre AS rol,
-        usuarios.estado
+        estado.estado AS estado
     FROM usuarios
     LEFT JOIN roles ON usuarios.role_id = roles.id
+    LEFT JOIN estado ON usuarios.estado_id = estado.id
 ');
 $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
