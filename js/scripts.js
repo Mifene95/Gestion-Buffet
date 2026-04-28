@@ -48,16 +48,27 @@ $('#formNuevoPlato').submit(function(e){
 //CREAR NUEVO USUARIO
 $('#formNuevoUsuario').submit(function(e){
     e.preventDefault();
-    var datos = $(this).serialize();
-    console.log(datos);
 
+    var pass = $('#password').val();
+    var passConfirm = $('#password_confirm').val();
+
+    if (pass !== passConfirm) {
+        Swal.fire({
+            title: "Las contraseñas no coinciden",
+            text: "Por favor, verifica que ambas contraseñas sean iguales.",
+            icon: "warning",
+            confirmButtonText: "Reintentar"
+        });
+        return; 
+    }
+
+    var datos = $(this).serialize();
+    
     $.ajax({
         url: '../inc/crear_usuario.php',
         method: 'POST',
         data: datos,
-
         success: function(respuesta){
-            
             if(respuesta === "ok"){
                 Swal.fire({
                     title: "¡Guardado!",
@@ -65,20 +76,23 @@ $('#formNuevoUsuario').submit(function(e){
                     icon: "success",
                     confirmButtonText: "Genial"
                 });
-                //LIMPIAMOS FORM
                 $('#formNuevoUsuario')[0].reset();
-            }else{
+            } else if (res === "pass_mismatch") {
+                // ESTA ES LA ALERTA QUE BUSCAS
+                Swal.fire({
+                    title: "Las contraseñas no coinciden",
+                    text: "Por favor, asegúrate de escribir la misma contraseña en ambos campos.",
+                    icon: "warning",
+                    confirmButtonText: "Corregir"
+                });
+            }else {
                 Swal.fire({
                     title: "Error",
                     text: "Hubo un error al crear el usuario",
                     icon: "error"
                 });
-
-                console.error("Detalle tecnico del error", respuesta)
-
             }
         }
-
-    })
-})
+    });
+});
 });

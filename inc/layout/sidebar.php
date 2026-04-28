@@ -46,6 +46,13 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                         <p>Crear usuario</p>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="gestion_usuarios.php" class="nav-link <?= ($pagina_actual == 'gestion_usuarios.php') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-user-pen"></i>
+                        <p>Gestionar usuarios</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

@@ -133,8 +133,6 @@ $(window).on('load', function() {
 
 
                 success: function(respuesta){
-    console.log('Respuesta raw:', JSON.stringify(respuesta));
-    console.log('Después trim:', JSON.stringify(respuesta.trim()));
                 if(respuesta.trim() === "ok"){
                     cargar_platos();
                     $('#modalTurnos').modal('hide');
