@@ -95,4 +95,13 @@ $('#formNuevoUsuario').submit(function(e){
         }
     });
 });
+
+$('#icono-platos').click(function(){
+    window.location.href = "../pages/tabla_platos.php";
+})
+
+$('#icono-usuarios').click(function(){
+    window.location.href = "../pages/gestion_usuarios.php";
+})
+
 });

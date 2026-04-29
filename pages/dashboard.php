@@ -103,7 +103,7 @@ include '../inc/layout/sidebar.php';
                             <h3><?php echo $total_platos; ?></h3>
                             <p>Platos en Buffet</p>
                         </div>
-                        <div class="icon"><i class="fas fa-hamburger"></i></div>
+                        <div class="icon" id="icono-platos" style="cursor: pointer;"><i class=" fas fa-hamburger"></i></div>
                     </div>
                 </div>
 
@@ -114,7 +114,7 @@ include '../inc/layout/sidebar.php';
                                 <h3><?php echo $total_usuarios; ?></h3>
                                 <p>Usuarios</p>
                             </div>
-                            <div class="icon"><i class="fas fa-user-shield"></i></div>
+                            <div class="icon"><i id="icono-usuarios" style="cursor: pointer;" class="fas fa-user-shield"></i></div>
                         </div>
                     </div>
                 <?php endif; ?>
