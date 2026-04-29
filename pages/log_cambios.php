@@ -18,21 +18,30 @@ $stmt_total = $pdo->query("SELECT COUNT(*) FROM logs_cambios");
 $total_registros = $stmt_total->fetchColumn();
 $total_paginas = ceil($total_registros / $por_pagina);
 
+//Unir los selects con union 
+
 $sql = "
     SELECT 
-        lc.id,
         lc.fecha,
-        lc.accion,
         u.username,
-        p.nombre_es as plato_nombre
+        lc.accion
     FROM logs_cambios lc
     LEFT JOIN usuarios u ON lc.usuario_id = u.id
-    LEFT JOIN platos p ON lc.plato_id = p.id
-    ORDER BY lc.id DESC
+    
+    UNION ALL
+    
+    SELECT 
+        ll.fecha,
+        u.username,
+        CONCAT('Login desde IP: ', ll.ip_address, ' Navegador: ', SUBSTRING_INDEX(ll.navegador, '(', 1)) as accion
+    FROM logs_login ll
+    LEFT JOIN usuarios u ON ll.usuario_id = u.id
+    
+    ORDER BY fecha DESC
     LIMIT $por_pagina OFFSET $offset
 ";
-$stmt_cambios = $pdo->query($sql);
-$cambios_detallados = $stmt_cambios->fetchAll(PDO::FETCH_ASSOC);
+$stmt_union = $pdo->query($sql);
+$resultado = $stmt_union->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -42,12 +51,12 @@ $cambios_detallados = $stmt_cambios->fetchAll(PDO::FETCH_ASSOC);
             <div class="row mb-2">
 
                 <div class="col-12">
-                    <h1 class="text-center">Nuevo Plato</h1>
+                    <h1 class="text-center">Registro de Actividad</h1>
                     <div class="row mt-3">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title"><i class="fas fa-list mr-2"></i>Historial de Cambios</h3>
+                                    <h3 class="card-title"><i class="fas fa-list mr-2"></i>Registro de Actividad del Buffet</h3>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-striped table-hover">
@@ -60,7 +69,7 @@ $cambios_detallados = $stmt_cambios->fetchAll(PDO::FETCH_ASSOC);
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($cambios_detallados as $cambio): ?>
+                                            <?php foreach ($resultado as $cambio): ?>
                                                 <tr>
                                                     <td><?php echo date('d/m/Y H:i:s', strtotime($cambio['fecha'])); ?></td>
                                                     <td><strong><?php echo htmlspecialchars($cambio['username']); ?></strong></td>
