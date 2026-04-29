@@ -3,11 +3,26 @@ const turnos = [
     { id: 2, nombre: 'Comida' },
     { id: 3, nombre: 'Cena' }
 ];
+
+const alergenos_iconos = {
+    'Gluten': '🌾',
+    'Lácteos': '🧀',
+    'Huevos': '🥚',
+    'Pescado': '🐟',
+    'Crustáceos': '🦐',
+    'Frutos Secos': '🌰'
+};
+
 function verAlergenos(alergenos) {
-    const lista = alergenos.split(',').map(a => `<li>${a.trim()}</li>`).join('');
+    const lista = alergenos.split(',').map(a => {
+        const nombre = a.trim();
+        const icono = alergenos_iconos[nombre] || '?';
+        return `<li>${icono} ${nombre}</li>`;
+    }).join('');
+    
     Swal.fire({
         title: 'Alérgenos',
-        html: `<ul style="text-align: left;">${lista}</ul>`,
+        html: `<ul style="text-align: left; list-style: none;">${lista}</ul>`,
         icon: 'info',
         confirmButtonText: 'Cerrar'
     });
@@ -35,25 +50,23 @@ const gridOptions = {
         hide: true,
     },
     {
-        field: "alergenos",
-        headerName: "Alergenos",
-        filter: true,
-        sortable: true,
-        field: "alergenos",
-    headerName: "Alergenos",
+    field: "alergenos",
+    headerName: "Alérgenos",
     filter: true,
     sortable: true,
     cellRenderer: function(params) {
-    if (!params.data.alergenos || params.data.alergenos.length === 0) {
-        return '-';
+        if (!params.data.alergenos || params.data.alergenos.length === 0) {
+            return '-';
+        }
+        
+        const alergenos = params.data.alergenos.split(',').map(a => a.trim());
+        const iconos = alergenos.map(alergeno => alergenos_iconos[alergeno] || '?').join(' ');
+        
+        return `<button class="btn btn-sm btn-info" onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
+                    ${iconos}
+                </button>`;
     }
-    
-    const count = params.data.alergenos.split(',').length;
-    
-    return `<button class="btn btn-sm btn-warning" onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
-                ${count} alérgenos
-            </button>`;
-}
+
     },
     {
         field: "mesa",
