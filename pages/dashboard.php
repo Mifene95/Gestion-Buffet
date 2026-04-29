@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 
 // Consultas para las tarjetas
 $total_platos = $pdo->query("SELECT COUNT(*) FROM platos")->fetchColumn();
-$total_admin = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE role_id = 1")->fetchColumn();
+$total_usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
 
 // Consulta posiciones por mesa
 $stmt_mesas = $pdo->prepare("
@@ -111,7 +111,7 @@ include '../inc/layout/sidebar.php';
                     <div class="col-lg-3 col-6">
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3><?php echo $total_admin; ?></h3>
+                                <h3><?php echo $total_usuarios; ?></h3>
                                 <p>Usuarios</p>
                             </div>
                             <div class="icon"><i class="fas fa-user-shield"></i></div>
@@ -146,7 +146,7 @@ include '../inc/layout/sidebar.php';
                 </div>
             </div>
 
-            <!-- FILA 3: Gráfico circular global -->
+            <!-- FILA 3-4: Gráfico global + Platos sin alérgenos (LADO A LADO) -->
             <div class="row mt-3">
                 <div class="col-lg-6">
                     <div class="card">
@@ -158,13 +158,11 @@ include '../inc/layout/sidebar.php';
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- FILA 4: Platos sin alérgenos -->
-            <div class="row mt-3">
+
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header bg-warning">
-                            <h3 class="card-title"><i class="fas fa-exclamation-triangle mr-2"></i>Platos sin Alérgenos Asignados</h3>
+                            <h3 class="card-title"><i class="fas fa-exclamation-triangle mr-2"></i>Platos sin Alérgenos</h3>
                         </div>
                         <div class="card-body">
                             <?php if (count($platos_sin_alergenos) > 0): ?>
@@ -190,9 +188,20 @@ include '../inc/layout/sidebar.php';
                     </div>
                 </div>
             </div>
-            <!-- FILA 5: Cambios por día -->
-            <!-- FILA 6: Gráfico alérgenos más comunes -->
+
+            <!-- FILA 5-6: Cambios por día + Alérgenos  -->
             <div class="row mt-3">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Cambios Realizados (Últimos 7 días)</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartCambios"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
@@ -233,7 +242,7 @@ include '../inc/layout/sidebar.php';
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
-                            </table>
+
 
                             <!-- Paginación -->
                             <nav aria-label="Page navigation" class="mt-3">

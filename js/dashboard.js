@@ -127,15 +127,24 @@ const chart_alergenos = new Chart(ctx_alergenos, {
             borderWidth: 1
         }]
     },
+    
     options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom'
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            beginAtZero: true,
+            ticks: {
+                stepSize: 1 
             }
         }
+    },
+    plugins: {
+        legend: {
+            position: 'bottom'
+        }
     }
+}
 });
 });

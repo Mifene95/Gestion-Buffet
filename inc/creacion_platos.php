@@ -20,6 +20,11 @@ if ($_POST) {
 
         $plato_id = $pdo->lastInsertId();
 
+
+        // Registrar creación del plato
+        $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
+        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Creó un plato: ']);
+
         //Insertamos los alergenos y el id del plato
         if (isset($_POST['alergenos']) && is_array($_POST['alergenos'])) {
             $stmtA = $pdo->prepare('INSERT into plato_alergenos (plato_id, alergeno_id) VALUES (?,?)');
@@ -39,9 +44,6 @@ if ($_POST) {
         }
 
         $pdo->commit();
-        // Registrar creación del plato
-        $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Creó plato: ' . $nombre_es]);
 
         if ($resultado) {
             echo 'ok';
