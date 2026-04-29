@@ -13,24 +13,15 @@ include "../inc/layout/sidebar.php";
             <h1>Panel de Control del Buffet</h1>
         </div>
     </div>
-
     <div class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">Listado de Platos Existentes</h3>
 
-                    <div class="d-flex align-items-center" style="gap: 10px;">
-                        <select id="selector_idioma" class="form-control" style="width: auto;">
-                            <option value="nombre_es">Español</option>
-                            <option value="nombre_en">Ingles</option>
-                            <option value="nombre_fr">Frances</option>
-                        </select>
-
-                        <a href="crear_plato.php" class="btn btn-success">
-                            <i class="fas fa-plus"></i> Crear Plato
-                        </a>
-                    </div>
+                    <a href="crear_plato.php" class="btn btn-success" style="margin-left: auto;">
+                        <i class="fas fa-plus"></i> Crear Plato
+                    </a>
                 </div>
                 <div class="card-body">
                     <div id="myGrid" style="height: 400px; width: 100%;" class="ag-theme-alpine"></div>

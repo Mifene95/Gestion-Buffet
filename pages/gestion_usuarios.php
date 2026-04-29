@@ -16,8 +16,12 @@ include "../inc/layout/sidebar.php";
     <div class="content">
         <div class="container-fluid">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Listado de Usuarios</h3>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">Gestión de Usuarios</h3>
+
+                    <a href="crear_usuario.php" class="btn btn-success" style="margin-left: auto;">
+                        <i class="fas fa-plus"></i> Crear Usuario
+                    </a>
                 </div>
                 <div class="card-body">
                     <div id="myGrid" style="height: 400px; width: 100%;" class="ag-theme-alpine"></div>

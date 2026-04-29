@@ -122,14 +122,6 @@ $(window).on('load', function() {
     }
     cargar_platos();
 
-    $('#selector_idioma').change(function() {
-        const idioma = $(this).val();
-        gridApi.setColumnsVisible(['nombre_es'], false); 
-        gridApi.setColumnsVisible(['nombre_en'], false); 
-        gridApi.setColumnsVisible(['nombre_fr'], false);
-        gridApi.setColumnsVisible([idioma], true);
-    });
-
     $(document).on('click', '.edit-plato', function(){
         const platoId = $(this).data('plato-id');
         const nombrePlato = $(this).data('plato-nombre');
