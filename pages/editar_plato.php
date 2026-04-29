@@ -74,19 +74,19 @@ include '../inc/layout/sidebar.php';
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="nombre_es">Nombre (Español)</label>
-                                            <input type="text" name="nombre_es" id="nombre_es" class="form-control" value="<?= htmlspecialchars($plato['nombre_es']) ?>" required>
+                                            <input type="text" name="nombre_es" id="nombre_es" class="form-control" value="<?= htmlspecialchars($plato['nombre_es']) ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="nombre_en">Nombre (Inglés)</label>
-                                            <input type="text" name="nombre_en" id="nombre_en" class="form-control" value="<?= htmlspecialchars($plato['nombre_en']) ?>" required>
+                                            <input type="text" name="nombre_en" id="nombre_en" class="form-control" value="<?= htmlspecialchars($plato['nombre_en']) ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="nombre_fr">Nombre (Francés)</label>
-                                            <input type="text" name="nombre_fr" id="nombre_fr" class="form-control" value="<?= htmlspecialchars($plato['nombre_fr']) ?>" required>
+                                            <input type="text" name="nombre_fr" id="nombre_fr" class="form-control" value="<?= htmlspecialchars($plato['nombre_fr']) ?>">
                                         </div>
                                     </div>
 

@@ -34,7 +34,7 @@ include '../inc/layout/sidebar.php';
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="nombre_es">Nombre (Español)</label>
-                                    <input type="text" name="nombre_es" id="nombre_es" class="form-control" placeholder="Ej: Paella mixta">
+                                    <input type="text" name="nombre_es" id="nombre_es" class="form-control" placeholder="Ej: Paella mixta" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="nombre_en">Nombre (Inglés)</label>
@@ -71,7 +71,7 @@ include '../inc/layout/sidebar.php';
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Posición</label>
-                                            <input type="text" name="posicion" class="form-control" placeholder="Ej: 03">
+                                            <input type="text" name="posicion" class="form-control" placeholder="Ej: 03" required>
                                         </div>
                                     </div>
 

@@ -12,7 +12,6 @@ if ($_POST) {
     $posicion = $_POST['posicion'];
 
     try {
-        //Transaccion all in o nada
         $pdo->beginTransaction();
 
         $stmt = $pdo->prepare('INSERT into platos (nombre_es, nombre_en, nombre_fr, mesa_id, posicion) VALUES(?,?,?,?,?)');
@@ -20,10 +19,9 @@ if ($_POST) {
 
         $plato_id = $pdo->lastInsertId();
 
-
-        // Registrar creación del plato
+        // Registrar creación del plato CON el nombre
         $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Creó un plato: ']);
+        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Creó plato nuevo plato: ' . $nombre_es]);
 
         //Insertamos los alergenos y el id del plato
         if (isset($_POST['alergenos']) && is_array($_POST['alergenos'])) {
@@ -39,7 +37,7 @@ if ($_POST) {
             $stmtT = $pdo->prepare('INSERT into plato_turnos (plato_id, turno_id) VALUES (?,?)');
 
             foreach ($_POST['turno'] as $turno_id) {
-                $stmtT->execute([$plato_id, $turno_id,]);
+                $stmtT->execute([$plato_id, $turno_id]);
             }
         }
 
@@ -51,10 +49,9 @@ if ($_POST) {
             echo 'error_tecnico';
         }
     } catch (Exception $e) {
-        //ROLLBACK si se queda abierta
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        echo "Error" . $e->getMessage();
-    };
-};
+        echo "Error: " . $e->getMessage();
+    }
+}

@@ -20,9 +20,9 @@ if ($_POST) {
         $stmt = $pdo->prepare('UPDATE platos SET nombre_es = ?, nombre_en = ?, nombre_fr = ?, mesa_id = ?, posicion = ? WHERE id = ?');
         $stmt->execute([$nombre_es, $nombre_en, $nombre_fr, $mesa_id, $posicion, $plato_id]);
 
-        // Registrar cambio de datos
+        // Registrar cambio de datos CON el nombre
         $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Editó datos del plato']);
+        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Editó datos del plato: ' . $nombre_es]);
 
         // DELETE y INSERT turnos
         $stmt = $pdo->prepare('DELETE FROM plato_turnos WHERE plato_id = ?');
@@ -34,17 +34,15 @@ if ($_POST) {
 
             foreach ($turnos as $turno_id) {
                 $stmti->execute([$plato_id, $turno_id]);
-                // Obtener nombre del turno
                 $stmt_turno = $pdo->prepare('SELECT nombre FROM turnos WHERE id = ?');
                 $stmt_turno->execute([$turno_id]);
                 $turno = $stmt_turno->fetch(PDO::FETCH_ASSOC);
                 $turnos_nombres[] = $turno['nombre'];
             }
 
-            // Un solo registro con todos los turnos
             $turnos_str = implode(', ', $turnos_nombres);
             $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó turnos: ' . $turnos_str]);
+            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó turnos: ' . $turnos_str . ' al plato: ' . $nombre_es]);
         }
 
         // DELETE y INSERT alérgenos
@@ -57,17 +55,15 @@ if ($_POST) {
 
             foreach ($alergenos as $alergeno_id) {
                 $stmt_alergenos->execute([$plato_id, $alergeno_id]);
-                // Obtener nombre del alérgeno
                 $stmt_alergeno = $pdo->prepare('SELECT nombre FROM alergenos WHERE id = ?');
                 $stmt_alergeno->execute([$alergeno_id]);
                 $alergeno = $stmt_alergeno->fetch(PDO::FETCH_ASSOC);
                 $alergenos_nombres[] = $alergeno['nombre'];
             }
 
-            // Un solo registro con todos los alérgenos
             $alergenos_str = implode(', ', $alergenos_nombres);
             $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó alérgenos: ' . $alergenos_str]);
+            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó alérgenos: ' . $alergenos_str . ' al plato ' . $nombre_es]);
         }
 
         $pdo->commit();

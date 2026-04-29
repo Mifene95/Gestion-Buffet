@@ -34,7 +34,7 @@ $stmt_sin_alergenos = $pdo->prepare("
 $stmt_sin_alergenos->execute();
 $platos_sin_alergenos = $stmt_sin_alergenos->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta cambios por día (para el gráfico)
+// Consulta cambios por dia
 $stmt_cambios_dia = $pdo->prepare("
     SELECT DATE(fecha) as dia, COUNT(*) as total_cambios
     FROM logs_cambios
@@ -65,7 +65,7 @@ $sql = "
     FROM logs_cambios lc
     LEFT JOIN usuarios u ON lc.usuario_id = u.id
     LEFT JOIN platos p ON lc.plato_id = p.id
-    ORDER BY lc.fecha DESC
+    ORDER BY lc.id DESC
     LIMIT $por_pagina OFFSET $offset
 ";
 $stmt_cambios = $pdo->query($sql);
@@ -227,7 +227,7 @@ include '../inc/layout/sidebar.php';
                                         <th>Fecha</th>
                                         <th>Usuario</th>
                                         <th>Acción</th>
-                                        <th>Plato</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -236,7 +236,7 @@ include '../inc/layout/sidebar.php';
                                             <td><?php echo date('d/m/Y', strtotime($cambio['fecha'])); ?></td>
                                             <td><strong><?php echo htmlspecialchars($cambio['username']); ?></strong></td>
                                             <td><?php echo htmlspecialchars($cambio['accion']); ?></td>
-                                            <td><?php echo $cambio['plato_nombre'] ? htmlspecialchars($cambio['plato_nombre']) : '-'; ?></td>
+
 
                                         </tr>
                                     <?php endforeach; ?>
