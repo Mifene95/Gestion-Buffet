@@ -41,6 +41,15 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                     </li>
                 <?php endif; ?>
 
+                <?php if ($_SESSION['role_id'] == 1): ?>
+                    <li class="nav-item">
+                        <a href="log_cambios.php" class="nav-link <?= ($pagina_actual == 'log_cambios.php') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-history"></i>
+                            <p>Registro logs</p>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
             </ul>
         </nav>
     </div>

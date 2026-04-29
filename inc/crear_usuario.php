@@ -3,6 +3,8 @@
 session_start();
 
 require 'db.php';
+require '../inc/auth_check.php';
+validar_acceso([1]);
 
 if ($_POST) {
     $nombre_usuario = $_POST['username'];
@@ -22,6 +24,9 @@ if ($_POST) {
     try {
         $stmt = $pdo->prepare('INSERT into usuarios (username, email, password, role_id) VALUES (?,?,?,?)');
         $resultado = $stmt->execute([$nombre_usuario, $email, $password_hash, $rol]);
+
+        $stmt_log = $pdo->prepare('INSERT into logs_cambios (usuario_id, accion, fecha) VALUES (?, ?, NOW())');
+        $stmt_log->execute([$_SESSION['user_id'], 'Creó un nuevo usuario: ' . $nombre_usuario]);
 
         if ($resultado) {
             echo 'ok';

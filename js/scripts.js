@@ -77,7 +77,7 @@ $('#formNuevoUsuario').submit(function(e){
                     confirmButtonText: "Genial"
                 });
                 $('#formNuevoUsuario')[0].reset();
-            } else if (res === "pass_mismatch") {
+            } else if (respuesta === "pass_mismatch") {
                 
                 Swal.fire({
                     title: "Las contraseñas no coinciden",
