@@ -3,7 +3,15 @@ const turnos = [
     { id: 2, nombre: 'Comida' },
     { id: 3, nombre: 'Cena' }
 ];
-
+function verAlergenos(alergenos) {
+    const lista = alergenos.split(',').map(a => `<li>${a.trim()}</li>`).join('');
+    Swal.fire({
+        title: 'Alérgenos',
+        html: `<ul style="text-align: left;">${lista}</ul>`,
+        icon: 'info',
+        confirmButtonText: 'Cerrar'
+    });
+}
 const gridOptions = {
     rowData: [],
     columnDefs: [{
@@ -30,7 +38,22 @@ const gridOptions = {
         field: "alergenos",
         headerName: "Alergenos",
         filter: true,
-        sortable: true
+        sortable: true,
+        field: "alergenos",
+    headerName: "Alergenos",
+    filter: true,
+    sortable: true,
+    cellRenderer: function(params) {
+    if (!params.data.alergenos || params.data.alergenos.length === 0) {
+        return '-';
+    }
+    
+    const count = params.data.alergenos.split(',').length;
+    
+    return `<button class="btn btn-sm btn-warning" onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
+                ${count} alérgenos
+            </button>`;
+}
     },
     {
         field: "mesa",

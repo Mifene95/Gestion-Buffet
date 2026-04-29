@@ -42,7 +42,7 @@ if ($_POST) {
 
             $turnos_str = implode(', ', $turnos_nombres);
             $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó turnos: ' . $turnos_str . ' al plato: ' . $nombre_es]);
+            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó turnos: ' . $turnos_str . ':' . ' al plato: ' . $nombre_es]);
         }
 
         // DELETE y INSERT alérgenos
@@ -63,7 +63,7 @@ if ($_POST) {
 
             $alergenos_str = implode(', ', $alergenos_nombres);
             $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó alérgenos: ' . $alergenos_str . ' al plato ' . $nombre_es]);
+            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó alérgenos: ' . $alergenos_str . ':' . ' al plato ' . $nombre_es]);
         }
 
         $pdo->commit();
