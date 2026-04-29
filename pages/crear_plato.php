@@ -107,11 +107,25 @@ include '../inc/layout/sidebar.php';
                                 <div class="row">
                                     <?php
                                     $lista_alergenos = $pdo->query('SELECT id, nombre FROM alergenos')->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach ($lista_alergenos as $alergenos) : ?>
-                                        <div class="col-md-3 col-sm-6 mb-2">
+
+                                    $alergenos_iconos = [
+                                        'Gluten' => '🌾',
+                                        'Lácteos' => '🧀',
+                                        'Huevos' => '🥚',
+                                        'Pescado' => '🐟',
+                                        'Crustáceos' => '🦐',
+                                        'Frutos Secos' => '🌰'
+                                    ];
+
+                                    foreach ($lista_alergenos as $alergenos) :
+                                        $icono = $alergenos_iconos[$alergenos['nombre']] ?? '⚠️';
+                                    ?>
+                                        <div class="col-md-4 col-sm-6 mb-2">
                                             <div class="custom-control custom-checkbox">
                                                 <input class="custom-control-input" type="checkbox" name="alergenos[]" id="alergeno_<?= $alergenos['id'] ?>" value="<?= $alergenos['id'] ?>">
-                                                <label for="alergeno_<?= $alergenos['id'] ?>" class="custom-control-label"><?= $alergenos['nombre'] ?></label>
+                                                <label for="alergeno_<?= $alergenos['id'] ?>" class="custom-control-label">
+                                                    <?= $icono ?> <?= $alergenos['nombre'] ?>
+                                                </label>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
