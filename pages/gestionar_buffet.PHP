@@ -7,8 +7,6 @@ include "../inc/layout/sidebar.php";
 
 ?>
 
-
-
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid m-3">
@@ -21,9 +19,11 @@ include "../inc/layout/sidebar.php";
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">Listado de platos por turno y Sección</h3>
 
-                    <a href="crear_plato.php" class="btn btn-success " style="margin-left: auto;">
-                        <i class="fas fa-plus"></i> Crear Plato
-                    </a>
+                    <?php if ($_SESSION['role_id'] === 1): ?>
+                        <a href="crear_plato.php" class="btn btn-success" style="margin-left: auto;">
+                            <i class="fas fa-plus"></i> Crear Plato
+                        </a>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <div id="myGridBuffet" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
@@ -31,52 +31,11 @@ include "../inc/layout/sidebar.php";
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalTurnos">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <h4 class="modal-title">Editar Turno</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <div class="modal-body">
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">Datos del Plato</h3>
-                        </div>
-
-                        <div class="card-body">
-
-                            <div class="form-group">
-                                <label>Nombre del Plato:</label>
-                                <p id="nombrePlatoModal" class="form-control-plaintext mb-0"></p>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Turnos</label>
-                                <div id="checkboxesTurnos"></div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="btnGuardarTurnos">
-                        <i class="fas fa-save"></i> Guardar Cambios
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
     <script>
         const ROL_USUARIO = <?php echo $_SESSION['role_id']; ?>;
     </script>
 </div>
+
 <?php include "../inc/layout/footer.php"; ?>
 <script src="../js/gestion_buffet.js"></script>
