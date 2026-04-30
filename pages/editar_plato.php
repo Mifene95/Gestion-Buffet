@@ -89,66 +89,31 @@ include '../inc/layout/sidebar.php';
                                             <input type="text" name="nombre_fr" id="nombre_fr" class="form-control" value="<?= htmlspecialchars($plato['nombre_fr']) ?>">
                                         </div>
                                     </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="mesa_id">Mesa / Sección</label>
-                                            <select name="mesa_id" id="mesa_id" class="form-control" required>
-                                                <option value="">Selecciona una mesa</option>
-                                                <?php foreach ($mesas as $mesa): ?>
-                                                    <option value="<?= $mesa['id'] ?>" <?= $plato['mesa_id'] == $mesa['id'] ? 'selected' : '' ?>>
-                                                        <?= htmlspecialchars($mesa['nombre']) ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="posicion">Posición en Mesa</label>
-                                            <input type="number" name="posicion" id="posicion" class="form-control" value="<?= $plato['posicion'] ?>" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label class="d-block">Disponibilidad de Turnos</label>
-                                            <div id="checkboxesTurnosEdit" class="p-3 border rounded bg-light">
-                                                <div class="row">
-                                                    <?php
-                                                    $turnos_activos = explode(',', $plato['turnos_ids']);
-                                                    ?>
-                                                    <?php foreach ($todos_los_turnos as $turno): ?>
-                                                        <div class="col-md-4">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input class="custom-control-input" type="checkbox" name="turnos[]"
-                                                                    id="turno_<?= $turno['id'] ?>"
-                                                                    value="<?= $turno['id'] ?>"
-                                                                    <?= in_array($turno['id'], $turnos_activos) ? 'checked' : '' ?>>
-                                                                <label class="custom-control-label" for="turno_<?= $turno['id'] ?>">
-                                                                    <?= $turno['nombre'] ?>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="d-block">Alérgenos</label>
                                             <div class="p-3 border rounded bg-light">
                                                 <div class="row">
-                                                    <?php foreach ($todos_alergenos as $alergeno): ?>
-                                                        <div class="col-md-4 ">
-                                                            <div class="custom-control custom-checkbox ">
-                                                                <input class="custom-control-input" type="checkbox" name="alergenos[]"
-                                                                    id="alergeno_<?= $alergeno['id'] ?>"
-                                                                    value="<?= $alergeno['id'] ?>"
-                                                                    <?= in_array($alergeno['id'], $alergenos_asignados) ? 'checked' : '' ?>>
-                                                                <label class="custom-control-label" for="alergeno_<?= $alergeno['id'] ?>">
-                                                                    <?= htmlspecialchars($alergeno['nombre']) ?>
+                                                    <?php
+                                                    $lista_alergenos = $pdo->query('SELECT id, nombre FROM alergenos')->fetchAll(PDO::FETCH_ASSOC);
+
+                                                    $alergenos_iconos = [
+                                                        'Gluten' => '🌾',
+                                                        'Lácteos' => '🧀',
+                                                        'Huevos' => '🥚',
+                                                        'Pescado' => '🐟',
+                                                        'Crustáceos' => '🦐',
+                                                        'Frutos Secos' => '🌰'
+                                                    ];
+
+                                                    foreach ($lista_alergenos as $alergenos) :
+                                                        $icono = $alergenos_iconos[$alergenos['nombre']] ?? '⚠️';
+                                                    ?>
+                                                        <div class="col-md-4 col-sm-6 mb-2">
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input class="custom-control-input" type="checkbox" name="alergenos[]" id="alergeno_<?= $alergenos['id'] ?>" value="<?= $alergenos['id'] ?>" <?= in_array($alergenos['id'], $alergenos_asignados) ? 'checked' : '' ?>>
+                                                                <label for="alergeno_<?= $alergenos['id'] ?>" class="custom-control-label">
+                                                                    <?= $icono ?> <?= $alergenos['nombre'] ?>
                                                                 </label>
                                                             </div>
                                                         </div>
