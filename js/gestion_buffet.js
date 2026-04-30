@@ -39,8 +39,8 @@ const gridOptionsBuffet = {
         if (ROL_USUARIO === 1) {
             return `
                 <div style="display: flex; gap: 5px;">
-                    <a href="editar_plato.php?id=${params.data.id}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-edit"></i> Editar
+                    <a href="editar_buffet.php?ids=${params.data.plato_ids.join(',')}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i> Editar
                     </a>
                     <button class="btn btn-sm btn-danger borrar-plato" data-id-plato="${params.data.id}">
                         <i class="fas fa-trash"></i> Borrar
@@ -89,4 +89,9 @@ $(window).on('load', function() {
         gridApiBuffet = agGrid.createGrid(gridDiv, gridOptionsBuffet);
     }
     cargarBuffet();
+
+    $(document).on('click', '.editar-buffet', function() {
+    const plato_ids = $(this).data('plato-ids');
+    window.location.href = 'editar_buffet.php?ids=' + plato_ids;
+});
 });
