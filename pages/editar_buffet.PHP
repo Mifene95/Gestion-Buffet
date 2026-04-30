@@ -57,7 +57,19 @@ include '../inc/layout/sidebar.php';
 
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-utensils mr-2"></i> Posición del Buffet</h3>
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="card-title"><i class="fas fa-utensils mr-2"></i> Posición del Buffet</h3>
+                                        <h5 class="text-primary mt-3">
+                                            <?php
+                                            $stmt_nombres = $pdo->prepare("SELECT nombre_es FROM platos WHERE id IN (" . implode(',', array_map('intval', $plato_ids)) . ")");
+                                            $stmt_nombres->execute();
+                                            $platos_nombres = $stmt_nombres->fetchAll(PDO::FETCH_COLUMN);
+                                            echo "Plato: " . htmlspecialchars(implode(', ', $platos_nombres));
+                                            ?>
+                                        </h5>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="card-body">

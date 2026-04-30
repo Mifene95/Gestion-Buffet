@@ -10,12 +10,12 @@ $stmt = $pdo->prepare("
         mesas.id as mesa_id,
         mesas.nombre AS mesa,
         platos.posicion,
-        turnos.id as turno_id,
-        turnos.nombre as turno_nombre,
+        platos.id as plato_id,
         platos.nombre_es,
-        platos.id as plato_id
+        turnos.id as turno_id,
+        turnos.nombre as turno_nombre
     FROM mesas
-    LEFT JOIN platos ON mesas.id = platos.mesa_id
+    INNER JOIN platos ON mesas.id = platos.mesa_id
     LEFT JOIN plato_turnos ON platos.id = plato_turnos.plato_id
     LEFT JOIN turnos ON plato_turnos.turno_id = turnos.id
     ORDER BY mesas.id, platos.posicion, turnos.id
@@ -33,8 +33,14 @@ foreach ($datos as $row) {
             'mesa_id' => $row['mesa_id'],
             'mesa' => $row['mesa'],
             'posicion' => $row['posicion'],
-            'turnos' => []
+            'turnos' => [],
+            'plato_ids' => [] // NUEVO
         ];
+    }
+
+    // Guardar todos los plato_ids
+    if ($row['plato_id'] && !in_array($row['plato_id'], $buffet[$key]['plato_ids'])) {
+        $buffet[$key]['plato_ids'][] = $row['plato_id'];
     }
 
     if ($row['turno_id']) {
