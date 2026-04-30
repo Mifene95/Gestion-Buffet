@@ -196,6 +196,8 @@ $(document).on('click', '.borrar-plato', function(e) {
     })
 });
 
+//VER platos posicion
+
 $(document).on('click', '.ver-platos-posicion', function(e) {
     e.preventDefault();
     const plato_ids = $(this).data('plato-ids');

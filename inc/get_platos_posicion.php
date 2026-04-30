@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 
 $plato_ids = explode(',', $_GET['plato_ids']);
 $plato_ids = array_map('intval', $plato_ids);
-$plato_ids = array_filter($plato_ids); // Elimina vacíos
+$plato_ids = array_filter($plato_ids);
 
 if (empty($plato_ids)) {
     echo json_encode([]);

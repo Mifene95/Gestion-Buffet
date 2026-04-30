@@ -1,7 +1,7 @@
 <?php
 require('../inc/db.php');
 require('../inc/auth_check.php');
-validar_acceso([1]);
+validar_acceso([1, 2]);
 
 // Capturar los IDs desde la URL (separados por coma)
 $plato_ids = isset($_GET['ids']) ? explode(',', $_GET['ids']) : [];
@@ -45,6 +45,9 @@ if (!$plato_id_editar) {
                                             <i class="fas fa-edit mr-2"></i><?= htmlspecialchars($plato['nombre_es']) ?>
                                         </a>
                                     <?php endforeach; ?>
+                                    <a href="gestionar_buffet.php" class="btn btn-default mr-2">
+                                        <i class="fas fa-arrow-left"></i> Volver a la lista
+                                    </a>
                                 </div>
                             </div>
                         </div>

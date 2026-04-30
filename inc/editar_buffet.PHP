@@ -14,6 +14,14 @@ if ($_POST) {
 
         // UPDATE SOLO el primer plato (el que se está editando)
         $first_id = $plato_ids[0];
+
+        // Obtener nombre del plato y mesa
+        $stmt_plato = $pdo->prepare('SELECT p.nombre_es, m.nombre as mesa_nombre FROM platos p LEFT JOIN mesas m ON p.mesa_id = m.id WHERE p.id = ?');
+        $stmt_plato->execute([$first_id]);
+        $plato_info = $stmt_plato->fetch(PDO::FETCH_ASSOC);
+        $plato_nombre = $plato_info['nombre_es'];
+        $mesa_nombre = $plato_info['mesa_nombre'];
+
         $stmt = $pdo->prepare('UPDATE platos SET mesa_id = ?, posicion = ? WHERE id = ?');
         $stmt->execute([$mesa_id, $posicion, $first_id]);
 
@@ -35,7 +43,7 @@ if ($_POST) {
 
             $turnos_str = implode(', ', $turnos_nombres);
             $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-            $stmt_log->execute([$_SESSION['user_id'], $first_id, 'Asignó turnos: ' . $turnos_str . ' a posición: ' . $posicion]);
+            $stmt_log->execute([$_SESSION['user_id'], $first_id, 'Asignó turnos: ' . $turnos_str . ' al plato: ' . $plato_nombre . ' en posición: ' . $posicion . ' (' . $mesa_nombre . ')']);
         }
 
         $pdo->commit();

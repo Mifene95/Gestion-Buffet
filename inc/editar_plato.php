@@ -16,14 +16,20 @@ if ($_POST) {
     try {
         $pdo->beginTransaction();
 
+        // Obtener mesa y posición
+        $stmt_plato = $pdo->prepare('SELECT p.nombre_es, p.posicion, m.nombre as mesa_nombre FROM platos p LEFT JOIN mesas m ON p.mesa_id = m.id WHERE p.id = ?');
+        $stmt_plato->execute([$plato_id]);
+        $plato_info = $stmt_plato->fetch(PDO::FETCH_ASSOC);
+        $mesa_nombre = $plato_info['mesa_nombre'];
+        $posicion = $plato_info['posicion'];
+
         // UPDATE plato
         $stmt = $pdo->prepare('UPDATE platos SET nombre_es = ?, nombre_en = ?, nombre_fr = ? WHERE id = ?');
         $stmt->execute([$nombre_es, $nombre_en, $nombre_fr, $plato_id]);
 
         // Registrar cambio de datos CON el nombre
         $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Editó datos del plato: ' . $nombre_es]);
-
+        $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Editó datos del plato: ' . $nombre_es . ' en posición: ' . $posicion . ' (' . $mesa_nombre . ')']);
 
         // DELETE y INSERT alérgenos
         $stmt = $pdo->prepare('DELETE FROM plato_alergenos WHERE plato_id = ?');
@@ -43,7 +49,7 @@ if ($_POST) {
 
             $alergenos_str = implode(', ', $alergenos_nombres);
             $stmt_log = $pdo->prepare('INSERT INTO logs_cambios (usuario_id, plato_id, accion, fecha) VALUES (?, ?, ?, NOW())');
-            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó alérgenos: ' . $alergenos_str . ':' . ' al plato ' . $nombre_es]);
+            $stmt_log->execute([$_SESSION['user_id'], $plato_id, 'Asignó alérgenos: ' . $alergenos_str . ' al plato: ' . $nombre_es]);
         }
 
         $pdo->commit();
