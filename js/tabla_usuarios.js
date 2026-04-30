@@ -6,29 +6,34 @@ const gridOptions = {
         width: 100,
         filter: true,
         sortable: true,
+        flex: 1
     },
     {
         field: "username",
         headerName: "Username",
         filter: true,
         sortable: true,
+        flex: 1
     },
     {
         field: "email",
         headerName: "Email",
         filter: true,
         sortable: true,
+        flex: 1
     },
     {
         field: "rol",
         headerName: "Rol",
         filter: true,
         sortable: true,
+        flex: 1
     },
     {
         field: "estado",
         headerName: "Estado",
-        filter: true
+        filter: true,
+        flex: 1
     },
     {
     headerName: "Acciones",

@@ -104,6 +104,8 @@ $(document).ready(function() {
                         icon: "success",
                         confirmButtonText: "Genial"
                     }).then(function() {
+                        // En lugar de recargar la página, solo recarga el grid
+                        cargarBuffet();  // Llama a cargarBuffet() que está en gestion_buffet.js
                         window.location.href = "gestionar_buffet.php";
                     });
                 } else {
