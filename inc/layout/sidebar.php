@@ -31,7 +31,12 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                         <p>Gestionar Platos</p>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a href="gestionar_buffet.php" class="nav-link <?= ($pagina_actual == 'gestionar_buffet.php') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-th-list"></i>
+                        <p>Gestionar Buffet</p>
+                    </a>
+                </li>
                 <?php if ($_SESSION['role_id'] == 1): ?>
                     <li class="nav-item">
                         <a href="gestion_usuarios.php" class="nav-link <?= ($pagina_actual == 'gestion_usuarios.php') ? 'active' : '' ?>">

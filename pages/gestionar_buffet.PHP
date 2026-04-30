@@ -79,4 +79,4 @@ include "../inc/layout/sidebar.php";
     </script>
 </div>
 <?php include "../inc/layout/footer.php"; ?>
-<script src="../js/tabla_platos.js"></script>
+<script src="../js/gestion_buffet.js"></script>
