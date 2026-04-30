@@ -21,9 +21,11 @@ include "../inc/layout/sidebar.php";
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">Listado de Platos Existentes</h3>
 
-                    <a href="crear_plato.php" class="btn btn-success " style="margin-left: auto;">
-                        <i class="fas fa-plus"></i> Crear Plato
-                    </a>
+                    <?php if ($_SESSION['role_id'] === 1): ?>
+                        <a href="crear_plato.php" class="btn btn-success" style="margin-left: auto;">
+                            <i class="fas fa-plus"></i> Crear Plato
+                        </a>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <div id="myGrid" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
