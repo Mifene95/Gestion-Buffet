@@ -11,17 +11,62 @@ if (empty($plato_ids)) {
     exit();
 }
 
-// Usar el primer plato para obtener mesa y posición (todos en la misma posición)
-$first_id = $plato_ids[0];
+// Si viene un plato_id específico, usa ese. Si no, muestra selector
+$plato_id_editar = isset($_GET['plato_id']) ? (int)$_GET['plato_id'] : null;
 
+if (!$plato_id_editar) {
+    // Mostrar selector de platos
+    $stmt = $pdo->prepare("SELECT id, nombre_es FROM platos WHERE id IN (" . implode(',', array_map('intval', $plato_ids)) . ")");
+    $stmt->execute();
+    $platos_posicion = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    include '../inc/layout/header.php';
+    include '../inc/layout/sidebar.php';
+?>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <h1 class="text-center">Selecciona Plato a Editar</h1>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-utensils mr-2"></i> Platos en esta Posición</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group">
+                                    <?php foreach ($platos_posicion as $plato): ?>
+                                        <a href="editar_buffet.php?ids=<?= implode(',', $plato_ids) ?>&plato_id=<?= $plato['id'] ?>" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-edit mr-2"></i><?= htmlspecialchars($plato['nombre_es']) ?>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+<?php
+    include '../inc/layout/footer.php';
+    exit();
+}
+
+// Si llegamos aquí, $plato_id_editar está definido
 $stmt = $pdo->prepare('
-    SELECT p.mesa_id, p.posicion, GROUP_CONCAT(pt.turno_id) as turnos_ids 
+    SELECT p.mesa_id, p.posicion, GROUP_CONCAT(pt.turno_id) as turnos_ids, p.nombre_es
     FROM platos p 
     LEFT JOIN plato_turnos pt ON p.id = pt.plato_id 
     WHERE p.id = ? 
     GROUP BY p.id
 ');
-$stmt->execute([$first_id]);
+$stmt->execute([$plato_id_editar]);
 $plato = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$plato) {
@@ -53,7 +98,7 @@ include '../inc/layout/sidebar.php';
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
                     <form id="formEditarBuffet">
-                        <input type="hidden" name="plato_ids" id="plato_ids" value="<?= implode(',', $plato_ids) ?>">
+                        <input type="hidden" name="plato_ids" id="plato_ids" value="<?= $plato_id_editar ?>">
 
                         <div class="card card-primary card-outline">
                             <div class="card-header">
@@ -61,12 +106,7 @@ include '../inc/layout/sidebar.php';
                                     <div>
                                         <h3 class="card-title"><i class="fas fa-utensils mr-2"></i> Posición del Buffet</h3>
                                         <h5 class="text-primary mt-3">
-                                            <?php
-                                            $stmt_nombres = $pdo->prepare("SELECT nombre_es FROM platos WHERE id IN (" . implode(',', array_map('intval', $plato_ids)) . ")");
-                                            $stmt_nombres->execute();
-                                            $platos_nombres = $stmt_nombres->fetchAll(PDO::FETCH_COLUMN);
-                                            echo "Plato: " . htmlspecialchars(implode(', ', $platos_nombres));
-                                            ?>
+                                            Plato: <?= htmlspecialchars($plato['nombre_es']) ?>
                                         </h5>
                                     </div>
                                 </div>

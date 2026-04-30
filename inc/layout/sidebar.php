@@ -33,7 +33,7 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                 </li>
                 <li class="nav-item">
                     <a href="gestionar_buffet.php" class="nav-link <?= ($pagina_actual == 'gestionar_buffet.php') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-th-list"></i>
+                        <i class="nav-icon fas fa-th"></i>
                         <p>Gestionar Buffet</p>
                     </a>
                 </li>

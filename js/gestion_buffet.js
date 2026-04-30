@@ -69,7 +69,7 @@ function cargarBuffet() {
             const datosFormateados = respuesta.map(item => ({
                 mesa_id: item.mesa_id,
                 posicion: item.posicion,
-                seccion: item.mesa + ' ' + item.posicion,
+                seccion: item.mesa + ' / ' + item.posicion,
                 desayuno: item.turnos[1]?.plato_nombre || '-',
                 comida: item.turnos[2]?.plato_nombre || '-',
                 cena: item.turnos[3]?.plato_nombre || '-',
@@ -111,11 +111,49 @@ $(document).ready(function() {
     });
 });
 
+$(document).on('click', '.editar-buffet', function(e) {
+    e.preventDefault();
+    const $btn = $(this);
+    const plato_ids = $btn.data('plato-ids');
+    const mesa_id = $btn.closest('tr').find('[data-mesa-id]').data('mesa-id');
+    const posicion = $btn.closest('tr').find('[data-posicion]').data('posicion');
+    
+    // Obtener mesa_id y posicion del primer plato_id
+    const first_plato_id = plato_ids.split(',')[0];
+    
+    $.ajax({
+        url: '../inc/get_platos_posicion.php',
+        method: 'GET',
+        data: { plato_ids: plato_ids },
+        success: function(respuesta) {
+            let html = '<ul class="list-group">';
+            respuesta.forEach(plato => {
+                html += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>${plato.nombre_es}</span>
+                        <a href="editar_buffet.php?ids=${plato.id}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            
+            Swal.fire({
+                title: 'Platos en esta posición',
+                html: html,
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
+        }
+    });
+});
+
 $(document).on('click', '.borrar-plato', function(e) {
     e.preventDefault();
     const plato_ids = $(this).data('plato-ids');
     
-    console.log('Platos a borrar:', plato_ids); // DEBUG
+    console.log('Platos a borrar:', plato_ids); 
 
     Swal.fire({
         title: "¿Eliminar platos?",
@@ -124,17 +162,17 @@ $(document).on('click', '.borrar-plato', function(e) {
         showCancelButton: true,
         confirmButtonText: "Sí, eliminar"
     }).then(function(result) {
-        console.log('Resultado del SweetAlert:', result); // DEBUG
+        console.log('Resultado del SweetAlert:', result);
         
         if (result.isConfirmed) {
-            console.log('Enviando AJAX...'); // DEBUG
+            console.log('Enviando AJAX...'); 
             
             $.ajax({
                 url: '../inc/borrar_buffet.php',
                 method: 'POST',
                 data: { plato_ids: plato_ids },
                 success: function(respuesta) {
-                    console.log('Respuesta:', respuesta); // DEBUG
+                    console.log('Respuesta:', respuesta); 
                     
                     if(respuesta.trim() === 'ok') {
                         Swal.fire("¡Eliminado!", "", "success");
@@ -144,7 +182,7 @@ $(document).on('click', '.borrar-plato', function(e) {
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error AJAX:', error); // DEBUG
+                    console.error('Error AJAX:', error); 
                 }
             })
         }

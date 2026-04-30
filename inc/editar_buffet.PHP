@@ -12,14 +12,12 @@ if ($_POST) {
     try {
         $pdo->beginTransaction();
 
-        // UPDATE todos los platos de esa posición
-        foreach ($plato_ids as $plato_id) {
-            $stmt = $pdo->prepare('UPDATE platos SET mesa_id = ?, posicion = ? WHERE id = ?');
-            $stmt->execute([$mesa_id, $posicion, $plato_id]);
-        }
-
-        // DELETE y INSERT turnos (solo para el primer plato)
+        // UPDATE SOLO el primer plato (el que se está editando)
         $first_id = $plato_ids[0];
+        $stmt = $pdo->prepare('UPDATE platos SET mesa_id = ?, posicion = ? WHERE id = ?');
+        $stmt->execute([$mesa_id, $posicion, $first_id]);
+
+        // DELETE y INSERT turnos (solo para este plato)
         $stmt = $pdo->prepare('DELETE FROM plato_turnos WHERE plato_id = ?');
         $stmt->execute([$first_id]);
 

@@ -16,11 +16,11 @@ $stmt = $pdo->prepare("
         platos.nombre_en, 
         platos.nombre_fr,  
         platos.posicion,
-        platos.mesa_id, -- Añadimos esto para tener el ID de la mesa
+        platos.mesa_id, 
         mesas.nombre AS mesa,
         GROUP_CONCAT(DISTINCT alergenos.nombre SEPARATOR ', ') AS alergenos,
         GROUP_CONCAT(DISTINCT turnos.nombre SEPARATOR ', ') AS turnos,
-        GROUP_CONCAT(DISTINCT turnos.id SEPARATOR ',') AS turnos_ids -- IMPORTANTE PARA TU FORMULARIO
+        GROUP_CONCAT(DISTINCT turnos.id SEPARATOR ',') AS turnos_ids 
     FROM platos
     LEFT JOIN plato_alergenos ON platos.id = plato_alergenos.plato_id
     LEFT JOIN alergenos ON plato_alergenos.alergeno_id = alergenos.id
