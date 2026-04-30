@@ -1,7 +1,7 @@
 <?php
 require('db.php');
 require('auth_check.php');
-validar_acceso([1]);
+validar_acceso([1, 2]);
 
 if ($_POST) {
     $posicion_id = (int)$_POST['posicion_id'];

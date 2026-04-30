@@ -36,7 +36,7 @@ const gridOptionsBuffet = {
             sortable: false,
             filter: false,
             cellRenderer: function(params) {
-                if (ROL_USUARIO === 1) {
+                
                     return `
                         <div style="display: flex; gap: 5px;">
                             <button class="btn btn-sm btn-primary editar-posicion" data-posicion-id="${params.data.posicion_id}">
@@ -48,9 +48,8 @@ const gridOptionsBuffet = {
                         </div>
                     `;
                 }
-                return '';
             }
-        }
+        
     ],
     pagination: true,
     paginationPageSize: 50,
