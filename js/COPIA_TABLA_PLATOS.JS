@@ -40,49 +40,34 @@ const gridOptions = {
         headerName: "Nombre_en",
         filter: true,
         sortable: true,
-        hide: true,
+        hide: false,
     },
     {
         field: "nombre_fr",
         headerName: "Nombre_fr",
         filter: true,
         sortable: true,
-        hide: true,
+        hide: false,
     },
     {
     field: "alergenos",
     headerName: "Alérgenos",
     filter: true,
     sortable: true,
+    headerClass: 'ag-center-aligned-header',
     flex: 1,
     cellRenderer: function(params) {
-        if (!params.data.alergenos || params.data.alergenos.length === 0) {
+        if (!params.data.alergenos) {
             return '-';
         }
-        
         const alergenos = params.data.alergenos.split(',').map(a => a.trim());
         const iconos = alergenos.map(alergeno => alergenos_iconos[alergeno] || '?').join(' ');
         
-        return `<button class="btn btn-lg" onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
+        return `<button class="btn btn-lg " onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
                     ${iconos}
                 </button>`;
     }
 
-    },
-    {
-        field: "mesa",
-        headerName: "Mesa / Sección",
-        filter: true
-    },
-    {
-        field: "posicion",
-        headerName: "Posición"
-    },
-    {
-        field: "turnos",
-        headerName: "Turno",
-        filter: true,
-        editable: true
     },
 {
     headerName: "Acciones",
