@@ -2,12 +2,19 @@ const gridOptionsBuffet = {
     rowData: [],
     columnDefs: [
         {
-            field: "seccion",
-            headerName: "Sección/Posición",
-            filter: true,
-            sortable: true,
-            width: 200,
-        },
+    field: "seccion",
+    headerName: "Sección/Posición",
+    filter: true,
+    sortable: true,
+    width: 200,
+    cellRenderer: function(params) {
+        return `
+            <a href="#" class="ver-platos-posicion" data-plato-ids="${params.data.plato_ids.join(',')}" style="color: #007bff; cursor: pointer;">
+                ${params.value}
+            </a>
+        `;
+    }
+},
         {
             field: "desayuno",
             headerName: "Turno Desayuno",
@@ -189,6 +196,37 @@ $(document).on('click', '.borrar-plato', function(e) {
     })
 });
 
+$(document).on('click', '.ver-platos-posicion', function(e) {
+    e.preventDefault();
+    const plato_ids = $(this).data('plato-ids');
+    
+    $.ajax({
+        url: '../inc/get_platos_posicion.php',
+        method: 'GET',
+        data: { plato_ids: plato_ids },
+        success: function(respuesta) {
+            let html = '<ul class="list-group">';
+            respuesta.forEach(plato => {
+                html += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-utensils mr-2"></i>${plato.nombre_es}</span>
+                        <a href="editar_buffet.php?ids=${plato_ids}&plato_id=${plato.id}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            
+            Swal.fire({
+                title: 'Platos en esta posición',
+                html: html,
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
+        }
+    });
+});
 $(window).on('load', function() {
     const gridDiv = document.querySelector('#myGridBuffet');
     if (gridDiv) {
