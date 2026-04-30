@@ -30,32 +30,26 @@ const gridOptionsBuffet = {
             flex: 1
         },
         {
-    headerName: "Acciones",
-    field: "id",
-    width: 200,
-    sortable: false,
-    filter: false,
-    cellRenderer: function(params) {
-        if (ROL_USUARIO === 1) {
-            return `
-                <div style="display: flex; gap: 5px;">
-                    <a href="editar_buffet.php?ids=${params.data.plato_ids.join(',')}" class="btn btn-sm btn-primary">
-                    <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <button class="btn btn-sm btn-danger borrar-plato" data-id-plato="${params.data.id}">
-                        <i class="fas fa-trash"></i> Borrar
-                    </button>
-                </div>
-            `;
-        } else {
-            return `
-                <button class="btn btn-sm btn-primary edit-plato" data-plato-id="${params.data.id}" data-plato-nombre="${params.data.nombre_es}" data-plato-turnos="${params.data.turnos || ''}">
-                    <i class="fas fa-clock"></i> Editar Turno
-                </button>
-            `;
+            headerName: "Acciones",
+            field: "id",
+            width: 200,
+            sortable: false,
+            filter: false,
+            cellRenderer: function(params) {
+                if (ROL_USUARIO === 1) {
+                    return `
+                        <div style="display: flex; gap: 5px;">
+                            <a href="editar_buffet.php?ids=${params.data.plato_ids.join(',')}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <button class="btn btn-sm btn-danger borrar-plato" data-id-plato="${params.data.id}">
+                                <i class="fas fa-trash"></i> Borrar
+                            </button>
+                        </div>
+                    `;
+                }
+            }
         }
-    }
-}
     ],
     pagination: true,
     paginationPageSize: 10,
@@ -83,15 +77,41 @@ function cargarBuffet() {
     });
 }
 
+$(document).ready(function() {
+    $('#formEditarBuffet').on('submit', function(e) {
+        e.preventDefault();
+        var datos = $(this).serialize();
+
+        $.ajax({
+            url: '../inc/editar_buffet.php',
+            method: 'POST',
+            data: datos,
+            success: function(respuesta) {
+                if(respuesta.trim() === 'ok') {
+                    Swal.fire({
+                        title: "¡Guardado!",
+                        text: "La posición se ha actualizado",
+                        icon: "success",
+                        confirmButtonText: "Genial"
+                    }).then(function() {
+                        window.location.href = "gestionar_buffet.php";
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: respuesta,
+                        icon: "error"
+                    });
+                }
+            }
+        })
+    });
+});
+
 $(window).on('load', function() {
     const gridDiv = document.querySelector('#myGridBuffet');
     if (gridDiv) {
         gridApiBuffet = agGrid.createGrid(gridDiv, gridOptionsBuffet);
     }
     cargarBuffet();
-
-    $(document).on('click', '.editar-buffet', function() {
-    const plato_ids = $(this).data('plato-ids');
-    window.location.href = 'editar_buffet.php?ids=' + plato_ids;
-});
 });
