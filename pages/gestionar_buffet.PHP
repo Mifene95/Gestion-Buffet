@@ -26,7 +26,7 @@ include "../inc/layout/sidebar.php";
                     </a>
                 </div>
                 <div class="card-body">
-                    <div id="myGrid" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
+                    <div id="myGridBuffet" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
                 </div>
             </div>
         </div>
