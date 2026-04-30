@@ -19,7 +19,7 @@ include "../inc/layout/sidebar.php";
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">Listado de Platos Existentes</h3>
+                    <h3 class="card-title">Listado de platos por turno y Sección</h3>
 
                     <a href="crear_plato.php" class="btn btn-success " style="margin-left: auto;">
                         <i class="fas fa-plus"></i> Crear Plato

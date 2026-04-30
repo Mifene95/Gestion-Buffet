@@ -4,7 +4,7 @@ require('auth_check.php');
 validar_acceso([1]);
 
 if ($_POST) {
-    $plato_id = $_POST['plato_ids'];  // Es un solo plato ahora
+    $plato_id = $_POST['plato_ids'];
     $mesa_id = $_POST['mesa_id'];
     $posicion = $_POST['posicion'];
     $turnos = $_POST['turnos'] ?? [];

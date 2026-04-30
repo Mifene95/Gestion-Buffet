@@ -10,7 +10,7 @@ include '../inc/layout/sidebar.php';
 
 // Consulta cambios con detalles - con paginación
 $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-$por_pagina = 10;
+$por_pagina = 15;
 $offset = ($pagina - 1) * $por_pagina;
 
 // Contar total

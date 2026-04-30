@@ -24,6 +24,8 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+
 $buffet = [];
 foreach ($datos as $row) {
     $key = $row['mesa_id'] . '_' . $row['posicion'];

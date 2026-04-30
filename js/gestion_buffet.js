@@ -73,6 +73,7 @@ function cargarBuffet() {
         url: '../inc/get_buffet.php',
         method: 'GET',
         success: function(respuesta) {
+            console.log(respuesta);
             const datosFormateados = respuesta.map(item => ({
                 mesa_id: item.mesa_id,
                 posicion: item.posicion,

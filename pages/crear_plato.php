@@ -136,7 +136,7 @@ include '../inc/layout/sidebar.php';
 
                         <div class="row pb-5">
                             <div class="col-12 text-right">
-                                <a href="gestion_platos.php" class="btn btn-default">Cancelar</a>
+                                <a href="tabla_platos.php" class="btn btn-default">Cancelar</a>
                                 <button type="submit" class="btn btn-success">
                                     <i class="fas fa-save"></i> Guardar Plato
                                 </button>
