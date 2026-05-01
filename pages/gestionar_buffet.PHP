@@ -18,12 +18,14 @@ include "../inc/layout/sidebar.php";
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">Listado de platos por turno y Sección</h3>
-
-                    <?php if ($_SESSION['role_id'] === 1): ?>
-                        <a href="crear_plato.php" class="btn btn-success" style="margin-left: auto;">
-                            <i class="fas fa-plus"></i> Crear Plato
+                    <div class="ml-auto">
+                        <a href="../inc/exportar_buffet_csv.php?filtro=asignados" class="btn btn-info btn-sm" title="Descarga solo las posiciones que tienen platos asignados">
+                            <i class="fas fa-download"></i> Descargar Asignados
                         </a>
-                    <?php endif; ?>
+                        <a href="../inc/exportar_buffet_csv.php?filtro=todos" class="btn btn-secondary btn-sm" title="Descarga todas las posiciones incluyendo las vacías">
+                            <i class="fas fa-download"></i> Descargar Todo
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div id="myGridBuffet" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
