@@ -3,17 +3,54 @@ $(document).ready(function(){
 $('#formNuevoPlato').submit(function(e){
     e.preventDefault();
 
-    //SERIALIZE JUNTA TODO
     var datos = $(this).serialize();
+    var mesa_id = $('[name="mesa_id"]').val();
+    var posicion = $('[name="posicion"]').val();
+    var turnos = $('[name="turno[]"]:checked').map(function() { return this.value; }).get();
+
     console.log(datos);
 
+    // Verificar si hay conflicto
+    $.ajax({
+        url: '../inc/verificar_conflicto.php',
+        method: 'POST',
+        data: {
+            mesa_id: mesa_id,
+            posicion: posicion,
+            turnos: turnos
+        },
+        dataType: 'json',
+        success: function(respuesta) {
+            if (respuesta.conflicto) {
+                // Hay un plato en ese turno
+                Swal.fire({
+                    title: "¡Conflicto detectado!",
+                    html: `Ya existe el plato <strong>${respuesta.plato_nombre}</strong> en ${respuesta.turno_nombre}.<br>¿Deseas sobrescribirlo?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, sobrescribir",
+                    cancelButtonText: "No, cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Enviar el formulario
+                        enviarCreacionPlato(datos);
+                    }
+                });
+            } else {
+                // No hay conflicto, enviar directamente
+                enviarCreacionPlato(datos);
+            }
+        }
+    });
+});
+
+// Función para enviar la creación del plato
+function enviarCreacionPlato(datos) {
     $.ajax ({
         url: '../inc/creacion_platos.php',
         method: 'POST',
         data: datos,
-
         success: function(respuesta){
-            
             if(respuesta === "ok"){
                 Swal.fire({
                     title: "¡Guardado!",
@@ -21,7 +58,6 @@ $('#formNuevoPlato').submit(function(e){
                     icon: "success",
                     confirmButtonText: "Genial"
                 });
-                //LIMPIAMOS FORM
                 $('#formNuevoPlato')[0].reset();
             }else{
                 Swal.fire({
@@ -29,20 +65,19 @@ $('#formNuevoPlato').submit(function(e){
                     text: "Hubo un error al crear un plato",
                     icon: "error"
                 });
-
                 console.error("Detalle tecnico del error", respuesta)
-
             }
         }
-    })
-
-});
+    });
+}
 
     $('.toggle-password').click(function() {
     const target = $($(this).data('target'));
     const type = target.attr('type') === 'password' ? 'text' : 'password';
     target.attr('type', type);
 });
+
+// ... resto del código
 
 
 //CREAR NUEVO USUARIO
