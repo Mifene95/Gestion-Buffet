@@ -87,22 +87,42 @@ $resultado = $stmt_union->fetchAll(PDO::FETCH_ASSOC);
                                         <ul class="pagination justify-content-center">
                                             <?php if ($pagina > 1): ?>
                                                 <li class="page-item">
-                                                    <a class="page-link" href="?pagina=<?php echo $pagina - 1; ?>">Anterior</a>
+                                                    <a class="page-link" href="?pagina=1">« Primera</a>
+                                                </li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?pagina=<?php echo $pagina - 1; ?>">‹ Anterior</a>
                                                 </li>
                                             <?php endif; ?>
 
-                                            <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                            <?php
+                                            // Mostrar solo 5 páginas alrededor de la actual
+                                            $inicio = max(1, $pagina - 2);
+                                            $fin = min($total_paginas, $pagina + 2);
+
+                                            if ($inicio > 1): ?>
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            <?php endif; ?>
+
+                                            <?php for ($i = $inicio; $i <= $fin; $i++): ?>
                                                 <li class="page-item <?php echo ($i == $pagina) ? 'active' : ''; ?>">
                                                     <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                                                 </li>
                                             <?php endfor; ?>
 
+                                            <?php if ($fin < $total_paginas): ?>
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            <?php endif; ?>
+
                                             <?php if ($pagina < $total_paginas): ?>
                                                 <li class="page-item">
-                                                    <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>">Siguiente</a>
+                                                    <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>">Siguiente ›</a>
+                                                </li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?pagina=<?php echo $total_paginas; ?>">Última »</a>
                                                 </li>
                                             <?php endif; ?>
                                         </ul>
+                                    </nav>
                                     </nav>
                                 </div>
                             </div>
