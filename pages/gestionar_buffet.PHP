@@ -35,6 +35,41 @@ include "../inc/layout/sidebar.php";
     <script>
         const ROL_USUARIO = <?php echo $_SESSION['role_id']; ?>;
     </script>
+    <!-- Modal para seleccionar plato -->
+    <div class="modal fade" id="modalSeleccionarPlato">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header flex">
+                    <h4 class="modal-title" id="modalTituloTurno">Seleccionar Plato</h4>
+                    <button type="button" class="btn btn-warning" id="btnCambiarTurno" style="margin-left: auto;">
+                        Cambiar Turno
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label><strong>Buscar plato:</strong></label>
+                        <input type="text" id="buscadorPlatos" class="form-control mb-3" placeholder="Escribe el nombre del plato...">
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>Platos disponibles:</strong></label>
+                        <div id="listaPlatos" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="posicion_id" value="">
+                    <input type="hidden" id="turno_id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnAsignarPlato">
+                        <i class="fas fa-save"></i> Asignar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php include "../inc/layout/footer.php"; ?>
