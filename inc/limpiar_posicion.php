@@ -7,7 +7,7 @@ if ($_POST) {
     $posicion_id = (int)$_POST['posicion_id'];
 
     try {
-        // Obtener info de la posición
+        // Obtener info de la posicion
         $stmt_info = $pdo->prepare('SELECT m.nombre, pp.posicion FROM plato_posiciones pp JOIN mesas m ON pp.mesa_id = m.id WHERE pp.id = ?');
         $stmt_info->execute([$posicion_id]);
         $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
