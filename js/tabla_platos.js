@@ -49,47 +49,45 @@ const gridOptions = {
         sortable: true,
     },
     {
-    field: "alergenos",
-    headerName: "Alérgenos",
-    filter: true,
-    sortable: true,
-    flex: 1,
-    cellRenderer: function(params) {
-        if (!params.data.alergenos || params.data.alergenos.length === 0) {
-            return '-';
+        field: "alergenos",
+        headerName: "Alérgenos",
+        filter: true,
+        sortable: true,
+        flex: 1,
+        cellRenderer: function(params) {
+            if (!params.data.alergenos || params.data.alergenos.length === 0) {
+                return '-';
+            }
+            
+            const alergenos = params.data.alergenos.split(',').map(a => a.trim());
+            const iconos = alergenos.map(alergeno => alergenos_iconos[alergeno] || '?').join(' ');
+            
+            return `<button class="btn btn-lg" onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
+                        ${iconos}
+                    </button>`;
         }
-        
-        const alergenos = params.data.alergenos.split(',').map(a => a.trim());
-        const iconos = alergenos.map(alergeno => alergenos_iconos[alergeno] || '?').join(' ');
-        
-        return `<button class="btn btn-lg" onclick="verAlergenos('${params.data.alergenos.replace(/'/g, "\\'")}')">
-                    ${iconos}
-                </button>`;
-    }
-
     },
-{
-    headerName: "Acciones",
-    field: "id",
-    width: 200,
-    sortable: false,
-    filter: false,
-    cellRenderer: function(params) {
-        if (ROL_USUARIO === 1) {
-            return `
-                <div style="display: flex; gap: 5px;">
-                    <a href="editar_plato.php?id=${params.data.id}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <button class="btn btn-sm btn-danger borrar-plato" data-id-plato="${params.data.id}">
-                        <i class="fas fa-trash"></i> Borrar
-                    </button>
-                </div>
-            `;
+    {
+        headerName: "Acciones",
+        field: "id",
+        width: 200,
+        sortable: false,
+        filter: false,
+        cellRenderer: function(params) {
+            if (ROL_USUARIO === 1) {
+                return `
+                    <div style="display: flex; gap: 5px;">
+                        <a href="editar_plato.php?id=${params.data.id}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <button class="btn btn-sm btn-danger borrar-plato" data-id-plato="${params.data.id}">
+                            <i class="fas fa-trash"></i> Borrar
+                        </button>
+                    </div>
+                `;
+            }
         }
-    }
-}
-    ],
+    }],
 };
 
 let gridApi;
@@ -104,6 +102,27 @@ function cargar_platos(){
     });
 }
 
+// MOSTRAR PLATOS EN LISTA
+function mostrarPlatos(platos) {
+    const lista = $('#listaPlatosEditar');
+    lista.empty();
+    
+    if (platos.length === 0) {
+        lista.append('<div class="alert alert-info">No se encontraron platos</div>');
+        return;
+    }
+    
+    platos.forEach(plato => {
+        lista.append(`
+            <div class="list-group-item list-group-item-action plato-editar"
+                data-id="${plato.id}"
+                style="cursor: pointer; padding: 10px; border-bottom: 1px solid #eee;">
+                <strong>${plato.nombre_es}</strong>
+            </div>
+        `);
+    });
+}
+
 $(window).on('load', function() {
     const gridDiv = document.querySelector('#myGrid');
     if (gridDiv) {
@@ -111,99 +130,68 @@ $(window).on('load', function() {
     }
     cargar_platos();
 
-    $(document).on('click', '.edit-plato', function(){
-        const platoId = $(this).data('plato-id');
-        const nombrePlato = $(this).data('plato-nombre');
-        const turnosActuales = $(this).data('plato-turnos');
+    // ABRIR MODAL BUSCAR PLATO
+    $(document).on('click', '#btnBuscarPlato', function() {
+        $('#buscadorPlatosEditar').val('');
         
-        const turnosIds = turnosActuales 
-            ? turnosActuales.split(', ').map(nombreTurno => 
-                turnos.find(t => t.nombre === nombreTurno).id
-            )
-            : [];
-        
-        $('#nombrePlatoModal').text(nombrePlato);
-        $('#btnGuardarTurnos').data('plato-id', platoId);
-        
-        let checkboxesHTML = '';
-        turnos.forEach(turno => {
-            const checked = turnosIds.includes(turno.id) ? 'checked' : '';
-            checkboxesHTML += `<div class="col-md-4 col-sm-6 mb-2">
-                <div class="custom-control custom-checkbox">
-                    <input class="custom-control-input" type="checkbox" name="turno_modal[]" id="turno_${turno.id}" value="${turno.id}" ${checked}>
-                    <label class="custom-control-label" for="turno_${turno.id}">
-                        ${turno.nombre}
-                    </label>
-                </div>
-            </div>`;
+        $.ajax({
+            url: '../inc/get_todos_platos.php',
+            method: 'GET',
+            success: function(respuesta) {
+                respuesta.sort((a, b) => a.nombre_es.localeCompare(b.nombre_es));
+                window.todosLosPlatosEditar = respuesta;
+                mostrarPlatos(respuesta.slice(0, 10));
+                $('#modalBuscarPlato').modal('show');
+            }
         });
-        
-        $('#checkboxesTurnos').html('<div class="row">' + checkboxesHTML + '</div>');
-        $('#modalTurnos').modal('show');
     });
 
-    $('#btnGuardarTurnos').click(function(){
-        let platoId = $(this).data('plato-id');
-        let turnosSeleccionados = $('input[name="turno_modal[]"]:checked').map(function() {
-            return $(this).val();
-        }).get();
-
-        $.ajax({
-            url: '../inc/guardar_turnos.php',
-            method: 'POST',
-            data: {
-                plato_id: platoId,
-                turnos: turnosSeleccionados
-            },
-            success: function(respuesta){
-                if(respuesta.trim() === "ok"){
-                    cargar_platos();
-                    $('#modalTurnos').modal('hide');
-                    Swal.fire({
-                        title: "¡Turno actualizado!",
-                        text: "Se actualizo el turno",
-                        icon: "success",
-                        confirmButtonText: "Genial"
-                    });
-                }else{
-                    Swal.fire({
-                        title: "Error",
-                        text: "Hubo un error al actualizar el plato",
-                        icon: "error"
-                    });
-                }
-            }
-        })
-    })
-
-    $(document).on('click', '.borrar-plato', function(e){
-    e.preventDefault();
-    const plato_id = $(this).data('id-plato');
-    console.log('Plato ID:', plato_id);
-
-    Swal.fire({
-        title: "¿Eliminar plato?",
-        text: "Esta accion no se puede deshacer",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminar"
-    }).then(function(result) {
-        if (result.isConfirmed) {
-            console.log('Enviando:', { plato_id: plato_id });
-            $.ajax({
-                url: '../inc/borrar_plato.php',
-                method: 'POST',
-                data: { plato_id: plato_id },
-                success: function(respuesta){
-                    console.log('Respuesta:', respuesta);
-                    if(respuesta.trim() === "ok") {
-                        Swal.fire("¡Eliminado!", "", "success");
-                        cargar_platos();
-                    }
-                }
-            }) 
+    // BUSCADOR EN TIEMPO REAL
+    $(document).on('keyup', '#buscadorPlatosEditar', function() {
+        const termino = $(this).val().toLowerCase();
+        
+        if (termino === '') {
+            mostrarPlatos(window.todosLosPlatosEditar.slice(0, 10));
+        } else {
+            const filtrados = window.todosLosPlatosEditar.filter(plato =>
+                plato.nombre_es.toLowerCase().includes(termino)
+            );
+            mostrarPlatos(filtrados);
         }
-    })   
-})
+    });
+
+    // CLICK EN PLATO → IR A EDITAR_PLATO.PHP
+    $(document).on('click', '.plato-editar', function() {
+        const id = $(this).data('id');
+        window.location.href = 'editar_plato.php?id=' + id;
+    });
+
+    // BORRAR PLATO
+    $(document).on('click', '.borrar-plato', function(e){
+        e.preventDefault();
+        const plato_id = $(this).data('id-plato');
+
+        Swal.fire({
+            title: "¿Eliminar plato?",
+            text: "Esta accion no se puede deshacer",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar"
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../inc/borrar_plato.php',
+                    method: 'POST',
+                    data: { plato_id: plato_id },
+                    success: function(respuesta){
+                        if(respuesta.trim() === "ok") {
+                            Swal.fire("¡Eliminado!", "", "success");
+                            cargar_platos();
+                        }
+                    }
+                }) 
+            }
+        })   
+    });
 
 });

@@ -4,7 +4,6 @@ validar_acceso([1, 2]);
 require "../inc/db.php";
 include "../inc/layout/header.php";
 include "../inc/layout/sidebar.php";
-
 ?>
 
 <div class="content-wrapper">
@@ -18,11 +17,16 @@ include "../inc/layout/sidebar.php";
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">Listado de Platos Existentes</h3>
-
                     <?php if ($_SESSION['role_id'] === 1): ?>
-                        <a href="crear_plato.php" class="btn btn-success" style="margin-left: auto;">
-                            <i class="fas fa-plus"></i> Crear Plato
-                        </a>
+                        <div class="d-flex ml-auto">
+                            <button class="btn btn-info mr-2" id="btnBuscarPlato">
+                                <i class="fas fa-search"></i> Buscar Plato
+                            </button>
+                            <a href="crear_plato.php" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Crear Plato
+                            </a>
+                        </div>
+
                     <?php endif; ?>
                 </div>
                 <div class="card-body">
@@ -31,9 +35,35 @@ include "../inc/layout/sidebar.php";
             </div>
         </div>
     </div>
+
+    <!-- MODAL BUSCAR PLATO (DENTRO DEL CONTENT-WRAPPER) -->
+    <div class="modal fade" id="modalBuscarPlato">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Buscar Plato</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label><strong>Buscar por nombre:</strong></label>
+                        <input type="text" id="buscadorPlatosEditar" class="form-control mb-3" placeholder="Escribe el nombre del plato...">
+                    </div>
+
+                    <div id="listaPlatosEditar" style="max-height: 400px; overflow-y: scroll; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const ROL_USUARIO = <?php echo $_SESSION['role_id']; ?>;
     </script>
 </div>
+
 <?php include "../inc/layout/footer.php"; ?>
 <script src="../js/tabla_platos.js"></script>
