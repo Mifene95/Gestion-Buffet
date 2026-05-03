@@ -66,8 +66,6 @@ function aplicarFiltro() {
         url: '../inc/get_buffet_nuevo.php',
         method: 'GET',
         success: function(respuesta) {
-            console.log("Buffet cargado:", respuesta);
-            
             let datosFormateados = respuesta.map(item => ({
                 posicion_id: item.posicion_id,
                 mesa_id: item.mesa_id,
@@ -79,12 +77,27 @@ function aplicarFiltro() {
                 turnos: item.turnos
             }));
             
-            // APLICAR FILTRO SI SE SELECCIONA MESA
+            // FILTRO MESA
             if (mesaSeleccionada) {
                 datosFormateados = datosFormateados.filter(item => 
                     item.mesa_id == mesaSeleccionada
                 );
             }
+            
+            // ACTUALIZAR CONTADORES
+            const total = datosFormateados.length * 3; // 3 turnos por posición
+
+            let asignadas = 0;
+            datosFormateados.forEach(item => {
+            if (item.desayuno !== '-') asignadas++;
+            if (item.comida !== '-') asignadas++;
+            if (item.cena !== '-') asignadas++;
+            });
+            const vacias = total - asignadas;
+
+            $('#totalPosiciones').text(total);
+            $('#posicionesAsignadas').text(asignadas);
+            $('#posicionesVacias').text(vacias);
             
             gridApiBuffet.setGridOption('rowData', datosFormateados);
         },
