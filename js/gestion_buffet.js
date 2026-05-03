@@ -49,9 +49,6 @@ const gridOptionsBuffet = {
             }
         }
     ],
-    pagination: true,
-    paginationPageSize: 50,
-    paginationPageSizeSelector: [10, 20, 50, 100]
 };
 
 let gridApiBuffet;

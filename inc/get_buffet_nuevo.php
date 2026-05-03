@@ -23,6 +23,7 @@ $stmt = $pdo->prepare("
     ORDER BY m.id, pp.posicion, t.id
 ");
 
+
 $stmt->execute();
 $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
