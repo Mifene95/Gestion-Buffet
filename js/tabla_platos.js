@@ -27,6 +27,7 @@ function verAlergenos(alergenos) {
         confirmButtonText: 'Cerrar'
     });
 }
+
 const gridOptions = {
     rowData: [],
     columnDefs: [{

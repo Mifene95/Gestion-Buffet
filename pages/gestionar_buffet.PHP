@@ -17,7 +17,16 @@ include "../inc/layout/sidebar.php";
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">Listado de platos por turno y Sección</h3>
+                    <div class="d-flex flex-column">
+                        <h3 class="card-title d-inline mr-3">Listado de platos por turno y Sección</h3>
+                        <select id="filtroMesa" class="form-control d-inline" style="width: 200px;">
+                            <option value="">Todas las mesas</option>
+                            <option value="1">Platos Calientes</option>
+                            <option value="2">Platos Fríos</option>
+                            <option value="3">Ensaladas</option>
+                            <option value="4">Postres</option>
+                        </select>
+                    </div>
                     <div class="ml-auto">
                         <a href="../inc/exportar_buffet_csv.php?filtro=asignados" class="btn btn-info btn-sm" title="Descarga solo las posiciones que tienen platos asignados">
                             <i class="fas fa-download"></i> Descargar Asignados
