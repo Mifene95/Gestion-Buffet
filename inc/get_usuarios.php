@@ -16,11 +16,11 @@ $stmt = $pdo->prepare('
         usuarios.id,
         usuarios.username,
         usuarios.email,
-        roles.nombre AS rol,
-        estado.estado AS estado
+        roles.nombre as rol,
+        estado.estado as estado
     FROM usuarios
-    LEFT JOIN roles ON usuarios.role_id = roles.id
-    LEFT JOIN estado ON usuarios.estado_id = estado.id
+    LEFT JOIN roles on usuarios.role_id = roles.id
+    LEFT JOIN estado on usuarios.estado_id = estado.id
 ');
 $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -77,7 +77,7 @@ function enviarCreacionPlato(datos) {
     target.attr('type', type);
 });
 
-// ... resto del código
+
 
 
 //CREAR NUEVO USUARIO

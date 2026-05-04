@@ -65,6 +65,12 @@ function cargar_usuarios(){
         method: 'GET',
         success: function(respuesta){
             gridApi.setGridOption('rowData', respuesta);
+            console.log(respuesta);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error AJAX:", error);
+            Swal.fire('Error', 'No se pudo guardar: ' + xhr.responseText, 'error');
+            console.log(respuesta)
         }
     });
 }

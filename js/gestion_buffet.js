@@ -76,7 +76,7 @@ function aplicarFiltro() {
                 cena: item.turnos[3]?.plato_nombre || '-',
                 turnos: item.turnos
             }));
-            
+            console.log("Getbuffet " , respuesta[0]);
             // FILTRO MESA
             if (mesaSeleccionada) {
                 datosFormateados = datosFormateados.filter(item => 
@@ -85,7 +85,7 @@ function aplicarFiltro() {
             }
             
             // ACTUALIZAR CONTADORES
-            const total = datosFormateados.length * 3; // 3 turnos por posición
+            const total = datosFormateados.length * 3; 
 
             let asignadas = 0;
             datosFormateados.forEach(item => {

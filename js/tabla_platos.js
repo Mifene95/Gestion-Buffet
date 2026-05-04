@@ -98,7 +98,9 @@ function cargar_platos(){
         method: 'GET',
         success: function(respuesta){
             gridApi.setGridOption('rowData', respuesta);
+            console.log(respuesta);
         }
+        
     });
 }
 
