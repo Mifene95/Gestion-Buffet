@@ -38,5 +38,27 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 $data = json_decode($response, true);
+$etiquetas = $data['data']['list'] ?? [];
 
-echo json_encode($data['data']['list'] ?? []);
+// Traer posiciones asignadas de la BD
+$stmt = $pdo->query('
+    SELECT ep.etiqueta_barcode, ep.nombre_posicion, m.nombre as mesa_nombre, pp.posicion
+    FROM etiqueta_posiciones ep
+    JOIN plato_posiciones pp ON ep.posicion_id = pp.id
+    JOIN mesas m ON pp.mesa_id = m.id
+');
+$posiciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Crear mapa barcode → posicion
+$mapa_posiciones = [];
+foreach ($posiciones as $pos) {
+    $mapa_posiciones[$pos['etiqueta_barcode']] = $pos['mesa_nombre'] . ' / ' . $pos['posicion'];
+}
+
+// Añadir posicion a cada etiqueta
+foreach ($etiquetas as &$etiqueta) {
+    $barcode = $etiqueta['priceTagCode'];
+    $etiqueta['ubicacion'] = $mapa_posiciones[$barcode] ?? 'Sin asignar';
+}
+
+echo json_encode($etiquetas);
