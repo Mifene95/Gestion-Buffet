@@ -55,6 +55,14 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                     </li>
                 <?php endif; ?>
 
+                <?php if ($_SESSION['role_id'] == 1): ?>
+                    <li class="nav-item">
+                        <a href="etiquetas.php" class="nav-link">
+                            <i class="nav-icon fas fa-tag"></i>
+                            <p>Etiquetas</p>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </nav>
     </div>

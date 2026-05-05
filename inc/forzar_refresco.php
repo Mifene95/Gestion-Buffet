@@ -1,0 +1,38 @@
+<?php
+require 'db.php';
+require 'auth_check.php';
+validar_acceso([1]);
+require 'zkong_auth.php';
+require 'zkong_config.php';
+
+$barcode = $_POST['barcode'] ?? null;
+
+$login = zkong_login();
+$token = $login['data']['token'];
+
+$url = ZKONG_URL . '/zk/bind/updateForceByBarCodes';
+
+$body = json_encode([
+    'storeId'     => ZKONG_STORE_ID,
+    'barCodeList' => $barcode ? [$barcode] : []
+    // ← Si hay barcode solo refresca esa, si no todas
+]);
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: ' . $token
+]);
+$response = curl_exec($ch);
+curl_close($ch);
+
+$data = json_decode($response, true);
+
+if ($data['success']) {
+    echo 'ok';
+} else {
+    echo 'Error: ' . $data['message'];
+}
