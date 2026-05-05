@@ -28,8 +28,8 @@ $body = json_encode([
             'barCode'      => 'SIN_PLATO',
             'attrCategory' => 'practicas',
             'attrName'     => 'Fernandez2',
-            'itemTitle'    => 'Sin Plato',
-            'custFeature1' => 'Sin Plato',
+            'itemTitle'    => 'Bienvenido al HotelBuffet',
+            'custFeature1' => '',
             'custFeature2' => '',
             'custFeature3' => '',
             'custFeature4' => ''
@@ -48,7 +48,28 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 curl_exec($ch);
 curl_close($ch);
 
-// PASO 2: Vincular etiqueta con "Sin Plato"
+// PASO 2: Desvincular etiqueta primero
+$url = ZKONG_URL . '/zk/bind/batchUnbind';
+
+$body = json_encode([
+    'storeId' => ZKONG_STORE_ID,
+    'tagItemBinds' => [
+        ['eslBarcode' => $etiqueta_barcode]
+    ]
+]);
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: ' . $token
+]);
+curl_exec($ch);
+curl_close($ch);
+
+// PASO 3: Vincular etiqueta con "Sin Plato"
 $url = ZKONG_URL . '/zk/bind/bindItemPriceTag/1';
 
 $body = json_encode([
