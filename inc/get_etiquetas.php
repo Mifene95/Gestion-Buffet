@@ -50,6 +50,11 @@ foreach ($posiciones as $pos) {
     $mapa_posiciones[$pos['etiqueta_barcode']] = $pos['mesa_nombre'] . ' / ' . $pos['posicion'];
 }
 
+// Añadir posicion a cada etiqueta
+foreach ($etiquetas as &$etiqueta) {
+    $barcode = $etiqueta['priceTagCode'];
+    $etiqueta['ubicacion'] = $mapa_posiciones[$barcode] ?? 'Sin asignar';
+}
 
 
 echo json_encode($etiquetas);
