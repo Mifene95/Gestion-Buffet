@@ -18,7 +18,6 @@ function zkong_enviar_plato($plato_id, $nombre_es, $nombre_en, $nombre_fr, $aler
     $token = $login['data']['token'];
 
     // PASO 2: Formatear alérgenos como texto
-    // PASO 2: Formatear alérgenos con letras de la fuente
     $mapa_alergenos = [
         'Gluten'       => 'g',
         'Pescado'      => 'i',
@@ -45,7 +44,7 @@ function zkong_enviar_plato($plato_id, $nombre_es, $nombre_en, $nombre_fr, $aler
         'agencyId'       => ZKONG_AGENCY_ID,
         'merchantId'     => ZKONG_MERCHANT_ID,
         'storeId'        => ZKONG_STORE_ID,
-        'emptyNeedDelete' => 1,  // sobreescribe aunque esté vacío
+        'emptyNeedDelete' => 1,
         'itemList' => [
             [
                 'barCode'      => 'PLATO_' . $plato_id,

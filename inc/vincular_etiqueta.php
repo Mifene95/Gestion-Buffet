@@ -16,7 +16,7 @@ if (!$plato_id || !$etiqueta_barcode) {
 // Obtener datos del plato
 $stmt = $pdo->prepare('
     SELECT p.nombre_es, p.nombre_en, p.nombre_fr,
-           GROUP_CONCAT(a.nombre SEPARATOR ", ") as alergenos
+        GROUP_CONCAT(a.nombre SEPARATOR ", ") as alergenos
     FROM platos p
     LEFT JOIN plato_alergenos pa ON p.id = pa.plato_id
     LEFT JOIN alergenos a ON pa.alergeno_id = a.id

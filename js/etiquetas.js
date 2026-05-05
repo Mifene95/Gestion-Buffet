@@ -82,12 +82,12 @@ const gridOptionsEtiquetas = {
         }
     ],
     pagination: true,
-    paginationPageSize: 20
+    paginationPageSize: 100
 };
 
 let gridApiEtiquetas;
 
-// CARGAR ETIQUETAS (solo una vez definida)
+// CARGAR ETIQUETAS 
 function cargarEtiquetas() {
     $.ajax({
         url: '../inc/get_etiquetas.php',
@@ -103,7 +103,6 @@ function cargarEtiquetas() {
         }
     });
 }
-
 // MOSTRAR PLATOS EN MODAL VINCULAR
 function mostrarPlatosEtiqueta(platos) {
     const lista = $('#listaPlatosEtiqueta');
@@ -281,7 +280,7 @@ $(document).on('click', '.plato-vincular', function() {
     });
 });
 
-// QUITAR PLATO
+// QUITAR PLATO para agregar el mensaje custom
 $(document).on('click', '.quitar-plato', function(e) {
     e.stopPropagation();
     const barcode = $(this).data('barcode');

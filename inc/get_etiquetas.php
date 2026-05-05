@@ -19,11 +19,6 @@ $url = ZKONG_URL . '/zk/erp/esl/list?page=0&size=100';
 
 $body = json_encode([
     'storeId'      => ZKONG_STORE_ID,
-    'itemBarCode'  => '',
-    'itemTitle'    => '',
-    'priceTagCode' => '',
-    'oemModel'     => '',
-    'shelfNo'      => ''
 ]);
 
 $ch = curl_init($url);
@@ -55,10 +50,6 @@ foreach ($posiciones as $pos) {
     $mapa_posiciones[$pos['etiqueta_barcode']] = $pos['mesa_nombre'] . ' / ' . $pos['posicion'];
 }
 
-// Añadir posicion a cada etiqueta
-foreach ($etiquetas as &$etiqueta) {
-    $barcode = $etiqueta['priceTagCode'];
-    $etiqueta['ubicacion'] = $mapa_posiciones[$barcode] ?? 'Sin asignar';
-}
+
 
 echo json_encode($etiquetas);
