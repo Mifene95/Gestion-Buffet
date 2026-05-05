@@ -18,8 +18,27 @@ function zkong_enviar_plato($plato_id, $nombre_es, $nombre_en, $nombre_fr, $aler
     $token = $login['data']['token'];
 
     // PASO 2: Formatear alérgenos como texto
-    // $alergenos viene como "Gluten, Lácteos, Huevos"
-    $alergenos_texto = !empty($alergenos) ? $alergenos : 'Sin alérgenos';
+    // PASO 2: Formatear alérgenos con letras de la fuente
+    $mapa_alergenos = [
+        'Gluten'       => 'g',
+        'Pescado'      => 'i',
+        'Lácteos'      => 'l',
+        'Crustáceos'   => 'k',
+        'Frutos Secos' => 'd',
+        'Huevos'       => 'h'
+    ];
+
+    $alergenos_texto = '';
+
+    if (!empty($alergenos)) {
+        foreach ($mapa_alergenos as $nombre => $letra) {
+            if (str_contains($alergenos, $nombre)) {
+                $alergenos_texto .= $letra;
+            }
+        }
+    }
+
+    $alergenos_texto = !empty($alergenos_texto) ? $alergenos_texto : 'Pp';
 
     // PASO 3: Preparar datos del producto
     $body = json_encode([

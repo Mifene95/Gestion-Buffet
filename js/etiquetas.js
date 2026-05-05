@@ -57,38 +57,28 @@ const gridOptionsEtiquetas = {
             }
         },
         {
-            field: "oemModel",
-            headerName: "Modelo",
-            filter: true,
-            sortable: true,
-            width: 140
-        },
-        {
-            field: "lastCommuTime",
-            headerName: "Última Conexión",
-            filter: true,
-            sortable: true,
-            width: 170
-        },
-        {
     headerName: "Acciones",
     sortable: false,
     filter: false,
-    width: 200,
+    width: 340,
     cellRenderer: function(params) {
-        return `
-            <div style="display: flex; gap: 5px;">
-                <button class="btn btn-sm btn-primary vincular-plato"
-                    data-barcode="${params.data.priceTagCode}">
-                    <i class="fas fa-link"></i> Vincular
-                </button>
-                <button class="btn btn-sm btn-warning refrescar-etiqueta"
-                    data-barcode="${params.data.priceTagCode}">
-                    <i class="fas fa-sync"></i>
-                </button>
-            </div>
-        `;
-    }
+    return `
+        <div style="display: flex; gap: 5px;">
+            <button class="btn btn-sm btn-primary vincular-plato"
+                data-barcode="${params.data.priceTagCode}">
+                <i class="fas fa-link"></i> Vincular
+            </button>
+            <button class="btn btn-sm btn-danger desvincular-plato"
+                data-barcode="${params.data.priceTagCode}">
+                <i class="fas  mr-1 fa-unlink"></i>DesVincular
+            </button>
+            <button class="btn btn-sm btn-warning refrescar-etiqueta"
+                data-barcode="${params.data.priceTagCode}">
+                <i class="fas mr-1 fa-sync"></i>Refrescar
+            </button>
+        </div>
+    `;
+}
 }
     ],
     pagination: true,
@@ -213,7 +203,7 @@ $(document).on('keyup', '#buscadorPlatosEtiqueta', function() {
     }
 });
 
-// CLICK EN PLATO → VINCULAR CON ETIQUETA
+// VINCULAR CON ETIQUETA
 $(document).on('click', '.plato-vincular', function() {
     const platoId = $(this).data('id');
     const nombrePlato = $(this).data('nombre');
@@ -250,9 +240,43 @@ $(document).on('click', '.plato-vincular', function() {
     });
 });
 
-// REFRESCAR
+// DESVINCULAR ETIQUETA
+$(document).on('click', '.desvincular-plato', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    const barcode = $(this).data('barcode');
+
+    Swal.fire({
+        title: '¿Desvincular etiqueta?',
+        text: 'La etiqueta quedará sin plato asignado',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, desvincular',
+        cancelButtonText: 'Cancelar'
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '../inc/desvincular_etiqueta.php',
+                method: 'POST',
+                data: { barcode: barcode },
+                success: function(respuesta) {
+                    if (respuesta.trim() === 'ok') {
+                        Swal.fire('¡Desvinculada!', 'Etiqueta sin plato asignado', 'success');
+                        cargarEtiquetas();
+                    } else {
+                        Swal.fire('Error', respuesta, 'error');
+                    }
+                }
+            });
+        }
+    });
+});
+
+// REFRESCAR TABLA
 $(document).on('click', '#btnRefrescar', function() {
-    cargarEtiquetas();
+    gridApiEtiquetas.setGridOption('rowData', []);  
+    cargarEtiquetas();  
 });
 
 // INIT
