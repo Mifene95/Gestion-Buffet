@@ -68,9 +68,9 @@ const gridOptionsEtiquetas = {
                 data-barcode="${params.data.priceTagCode}">
                 <i class="fas fa-link"></i> Vincular
             </button>
-            <button class="btn btn-sm btn-danger desvincular-plato"
+            <button class="btn btn-sm btn-danger quitar-plato"
                 data-barcode="${params.data.priceTagCode}">
-                <i class="fas  mr-1 fa-unlink"></i>DesVincular
+                <i class="fas  mr-1 fa-unlink"></i>QuitarPlato
             </button>
             <button class="btn btn-sm btn-warning refrescar-etiqueta"
                 data-barcode="${params.data.priceTagCode}">
@@ -240,29 +240,26 @@ $(document).on('click', '.plato-vincular', function() {
     });
 });
 
-// DESVINCULAR ETIQUETA
-$(document).on('click', '.desvincular-plato', function(e) {
+//QUITAR PLATO
+$(document).on('click', '.quitar-plato', function(e) {
     e.stopPropagation();
-    e.preventDefault();
-    
     const barcode = $(this).data('barcode');
 
     Swal.fire({
-        title: '¿Desvincular etiqueta?',
-        text: 'La etiqueta quedará sin plato asignado',
-        icon: 'warning',
+        title: '¿Quitar plato?',
+        text: 'La etiqueta mostrará "Sin Plato"',
+        icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Sí, desvincular',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'Sí, quitar'
     }).then(function(result) {
         if (result.isConfirmed) {
             $.ajax({
-                url: '../inc/desvincular_etiqueta.php',
+                url: '../inc/quitar_plato_etiqueta.php',
                 method: 'POST',
-                data: { barcode: barcode },
+                data: { etiqueta_barcode: barcode },
                 success: function(respuesta) {
                     if (respuesta.trim() === 'ok') {
-                        Swal.fire('¡Desvinculada!', 'Etiqueta sin plato asignado', 'success');
+                        Swal.fire('¡Listo!', 'Etiqueta actualizada', 'success');
                         cargarEtiquetas();
                     } else {
                         Swal.fire('Error', respuesta, 'error');
@@ -272,6 +269,7 @@ $(document).on('click', '.desvincular-plato', function(e) {
         }
     });
 });
+
 
 // REFRESCAR TABLA
 $(document).on('click', '#btnRefrescar', function() {
