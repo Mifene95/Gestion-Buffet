@@ -13,7 +13,7 @@ $stmt->execute([$hora_actual, $hora_actual]);
 $turno_actual = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // SIN TURNO 
-if (!$turno_actual || empty($plato)) {
+if (!$turno_actual) {
     $stmt = $pdo->query('SELECT etiqueta_barcode FROM etiqueta_posiciones');
     $etiquetas = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -42,7 +42,7 @@ if (!$turno_actual || empty($plato)) {
         curl_close($ch);
     }
 
-    echo json_encode(['turno' => null, 'mensaje' => 'Sin turno activo o sin plato en turno - mostrando logo buffet']);
+    echo json_encode(['turno' => null, 'mensaje' => 'Sin turno activo - mostrando logo buffet']);
     exit();
 }
 
@@ -62,7 +62,34 @@ $stmt->execute([$turno_actual['id']]);
 $platos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (empty($platos)) {
-    echo json_encode(['turno' => $turno_actual['nombre'], 'mensaje' => 'No hay platos asignados']);
+    $stmt = $pdo->query('SELECT etiqueta_barcode FROM etiqueta_posiciones');
+    $etiquetas = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    $login = zkong_login();
+    $token = $login['data']['token'];
+
+    foreach ($etiquetas as $barcode) {
+        $url = ZKONG_URL . '/zk/bind/batchUnbind';
+        $body = json_encode(['storeId' => ZKONG_STORE_ID, 'tagItemBinds' => [['eslBarcode' => $barcode]]]);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: ' . $token]);
+        curl_exec($ch);
+        curl_close($ch);
+
+        $url = ZKONG_URL . '/zk/bind/bindItemPriceTag/1';
+        $body = json_encode(['storeId' => ZKONG_STORE_ID, 'itemBarCode' => 'SIN_PLATO', 'priceTagCode' => $barcode]);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: ' . $token]);
+        curl_exec($ch);
+        curl_close($ch);
+    }
+    echo json_encode(['turno' => $turno_actual['nombre'], 'mensaje' => 'No hay platos asignados - mostrando logo hotel']);
     exit();
 }
 
