@@ -415,3 +415,37 @@ $(window).on('load', function() {
     }
     cargarEtiquetas();
 });
+
+// CAMBIO AUTOMÁTICO DE TURNO
+let ultimoTurno = 'inicial';
+
+setInterval(function() {
+    $.ajax({
+        url: '../inc/get_turno_actual.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function(respuesta) {
+            console.log("Turno actual:", respuesta.turno);
+
+            const turnoActual = respuesta.turno || 'sin_turno';
+            
+
+            if (turnoActual !== ultimoTurno) {
+                console.log("¡Turno cambiado! De:", ultimoTurno, "a:", turnoActual);
+                ultimoTurno = turnoActual;
+
+                $.ajax({
+                    url: '../inc/cambiar_turno_automatico.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(resultado) {
+                        console.log("Resultado:", resultado);
+                        cargarEtiquetas();
+                    }
+                });
+            } else {
+                console.log("Mismo turno, sin cambios:", turnoActual);
+            }
+        }
+    });
+}, 60000);
