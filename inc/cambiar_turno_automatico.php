@@ -13,7 +13,7 @@ $stmt->execute([$hora_actual, $hora_actual]);
 $turno_actual = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // SIN TURNO 
-if (!$turno_actual) {
+if (!$turno_actual || empty($plato)) {
     $stmt = $pdo->query('SELECT etiqueta_barcode FROM etiqueta_posiciones');
     $etiquetas = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -42,7 +42,7 @@ if (!$turno_actual) {
         curl_close($ch);
     }
 
-    echo json_encode(['turno' => null, 'mensaje' => 'Sin turno activo - mostrando logo buffet']);
+    echo json_encode(['turno' => null, 'mensaje' => 'Sin turno activo o sin plato en turno - mostrando logo buffet']);
     exit();
 }
 
