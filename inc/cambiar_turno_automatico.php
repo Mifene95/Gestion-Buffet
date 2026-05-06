@@ -61,6 +61,7 @@ $stmt = $pdo->prepare('
 $stmt->execute([$turno_actual['id']]);
 $platos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+//SIN PLATO 
 if (empty($platos)) {
     $stmt = $pdo->query('SELECT etiqueta_barcode FROM etiqueta_posiciones');
     $etiquetas = $stmt->fetchAll(PDO::FETCH_COLUMN);
