@@ -31,13 +31,18 @@ if (!$plato) {
     exit();
 }
 
+// LOGIN
+$login = zkong_login();
+$token = $login['data']['token'];
+
 // PASO 1: Enviar plato a ZKONG
 $resultado = zkong_enviar_plato(
     $plato_id,
     $plato['nombre_es'],
     $plato['nombre_en'],
     $plato['nombre_fr'],
-    $plato['alergenos'] ?? 'Sin alérgenos'
+    $plato['alergenos'] ?? 'Sin alérgenos',
+    $token
 );
 
 if (!$resultado['success']) {

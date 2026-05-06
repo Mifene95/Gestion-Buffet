@@ -5,17 +5,9 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // FUNCIÓN PRINCIPAL: Enviar plato a ZKONG
-function zkong_enviar_plato($plato_id, $nombre_es, $nombre_en, $nombre_fr, $alergenos)
+function zkong_enviar_plato($plato_id, $nombre_es, $nombre_en, $nombre_fr, $alergenos, $token)
 {
 
-    // PASO 1: Login para obtener token
-    $login = zkong_login();
-
-    if (!$login['success']) {
-        return ['success' => false, 'message' => 'Error al conectar con ZKONG'];
-    }
-
-    $token = $login['data']['token'];
 
     // PASO 2: Formatear alérgenos como texto
     $mapa_alergenos = [
