@@ -22,4 +22,5 @@ foreach ($turnos as $turno_id => $horario) {
 // Actualizar el CRON con los nuevos horarios
 require 'actualizar_cron.php';
 
+
 echo 'ok';

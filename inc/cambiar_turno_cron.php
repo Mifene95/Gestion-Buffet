@@ -3,13 +3,27 @@ require __DIR__ . '/db.php';
 require __DIR__ . '/zkong_auth.php';
 require __DIR__ . '/zkong_api.php';
 
-// SIN auth_check → el CRON no tiene sesión
-
 $hora_actual = date('H:i:s');
+$hora_minuto = date('H:i');
 
+// Buscar turno activo ahora
 $stmt = $pdo->prepare('SELECT id, nombre FROM turnos WHERE hora_inicio <= ? AND hora_fin >= ?');
 $stmt->execute([$hora_actual, $hora_actual]);
 $turno_actual = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Leer el último turno guardado
+$ultimo_turno_file = __DIR__ . '/ultimo_turno.txt';
+$ultimo_turno = file_exists($ultimo_turno_file) ? trim(file_get_contents($ultimo_turno_file)) : '';
+
+$turno_actual_nombre = $turno_actual ? $turno_actual['nombre'] : 'sin_turno';
+
+// Si no ha cambiado, no hacer nada
+if ($turno_actual_nombre === $ultimo_turno) {
+    exit();
+}
+
+// Ha cambiado el turno → actualizar
+file_put_contents($ultimo_turno_file, $turno_actual_nombre);
 
 $login = zkong_login();
 $token = $login['data']['token'];
@@ -40,6 +54,9 @@ if (!$turno_actual) {
         curl_exec($ch);
         curl_close($ch);
     }
+
+    $log = date('Y-m-d H:i:s') . " - Sin turno activo - mostrando logo buffet\n";
+    file_put_contents(__DIR__ . '/cron_log.txt', $log, FILE_APPEND);
     exit();
 }
 
@@ -58,7 +75,13 @@ $stmt = $pdo->prepare('
 $stmt->execute([$turno_actual['id']]);
 $platos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (empty($platos)) exit();
+if (empty($platos)) {
+    $log = date('Y-m-d H:i:s') . " - Turno: " . $turno_actual['nombre'] . " - Sin platos asignados\n";
+    file_put_contents(__DIR__ . '/cron_log.txt', $log, FILE_APPEND);
+    exit();
+}
+
+$actualizadas = 0;
 
 foreach ($platos as $plato) {
     $resultado = zkong_enviar_plato(
@@ -91,8 +114,9 @@ foreach ($platos as $plato) {
     curl_setopt($ch2, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: ' . $token]);
     curl_exec($ch2);
     curl_close($ch2);
+
+    $actualizadas++;
 }
 
-// LOG para saber que se ejecutó
-$log = date('Y-m-d H:i:s') . " - Turno: " . ($turno_actual ? $turno_actual['nombre'] : 'Sin turno') . "\n";
+$log = date('Y-m-d H:i:s') . " - Turno: " . $turno_actual['nombre'] . " - Actualizadas: {$actualizadas}\n";
 file_put_contents(__DIR__ . '/cron_log.txt', $log, FILE_APPEND);
