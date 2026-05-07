@@ -1,2 +1,4 @@
 2026-05-07 08:19:18 - Turno: Desayuno
 2026-05-07 08:21:14 - Turno: Desayuno
+2026-05-07 11:58:26 - Turno: Comida
+2026-05-07 12:02:24 - Turno: Comida
