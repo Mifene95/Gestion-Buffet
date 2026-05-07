@@ -63,6 +63,15 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
                         </a>
                     </li>
                 <?php endif; ?>
+
+                <?php if ($_SESSION['role_id'] == 1): ?>
+                    <li class="nav-item">
+                        <a href="configuracion.php" class="nav-link">
+                            <i class="nav-icon fas fa-cog"></i>
+                            <p>Configuración</p>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </nav>
     </div>
