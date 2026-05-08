@@ -2,17 +2,31 @@
 require '../inc/auth_check.php';
 validar_acceso([1]);
 require "../inc/db.php";
+
+$page_title = 'Etiquetas';
+
 include "../inc/layout/header.php";
 include "../inc/layout/sidebar.php";
 ?>
 
 <div class="content-wrapper">
-    <div class="content-header">
-        <div class="container-fluid m-3">
-            <h1>Gestión de Etiquetas</h1>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><?= htmlspecialchars($page_title) ?></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="dashboard.php"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="breadcrumb-item active">Etiquetas</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="content">
+    </section>
+
+    <section class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -35,7 +49,7 @@ include "../inc/layout/sidebar.php";
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- MODAL VINCULAR PLATO -->
     <div class="modal fade" id="modalVincularPlato">
@@ -128,5 +142,5 @@ include "../inc/layout/sidebar.php";
     </script>
 </div>
 
+<?php $page_scripts = ['../js/etiquetas.js']; ?>
 <?php include "../inc/layout/footer.php"; ?>
-<script src="../js/etiquetas.js"></script>

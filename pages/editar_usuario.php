@@ -20,6 +20,8 @@ if (!$usuario) {
     exit();
 }
 
+$page_title = 'Editar Usuario';
+
 include '../inc/layout/header.php';
 include '../inc/layout/sidebar.php';
 ?>
@@ -27,7 +29,18 @@ include '../inc/layout/sidebar.php';
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
-            <h1 class="text-center">Editar Usuario</h1>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><?= htmlspecialchars($page_title) ?></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="dashboard.php"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="gestion_usuarios.php">Gestión de Usuarios</a></li>
+                        <li class="breadcrumb-item active">Editar Usuario</li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -105,7 +118,5 @@ include '../inc/layout/sidebar.php';
     </section>
 </div>
 
-<?php
-include '../inc/layout/footer.php';
-?>
-<script src="../js/editar_usuario.js"></script>
+<?php $page_scripts = ['../js/editar_usuario.js']; ?>
+<?php include '../inc/layout/footer.php'; ?>

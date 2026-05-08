@@ -7,17 +7,30 @@ require "../inc/db.php";
 $stmt = $pdo->query('SELECT id, nombre, hora_inicio, hora_fin FROM turnos ORDER BY id');
 $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$page_title = 'Configuración';
+
 include "../inc/layout/header.php";
 include "../inc/layout/sidebar.php";
 ?>
 
 <div class="content-wrapper">
-    <div class="content-header">
-        <div class="container-fluid m-3">
-            <h1>Configuración</h1>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><?= htmlspecialchars($page_title) ?></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="dashboard.php"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="breadcrumb-item active">Configuración</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="content">
+    </section>
+
+    <section class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
@@ -73,8 +86,8 @@ include "../inc/layout/sidebar.php";
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
+<?php $page_scripts = ['../js/configuracion.js']; ?>
 <?php include "../inc/layout/footer.php"; ?>
-<script src="../js/configuracion.js"></script>

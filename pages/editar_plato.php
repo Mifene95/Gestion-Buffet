@@ -46,6 +46,8 @@ $mesas = $stmt_mesas->fetchAll(PDO::FETCH_ASSOC);
 $stmt_turnos = $pdo->query("SELECT * FROM turnos");
 $todos_los_turnos = $stmt_turnos->fetchAll(PDO::FETCH_ASSOC);
 
+$page_title = 'Editar Plato';
+
 include '../inc/layout/header.php';
 include '../inc/layout/sidebar.php';
 ?>
@@ -53,7 +55,18 @@ include '../inc/layout/sidebar.php';
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
-            <h1 class="text-center">Editar Plato</h1>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><?= htmlspecialchars($page_title) ?></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="dashboard.php"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="tabla_platos.php">Gestionar Platos</a></li>
+                        <li class="breadcrumb-item active">Editar Plato</li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -143,7 +156,5 @@ include '../inc/layout/sidebar.php';
     </section>
 </div>
 
-<?php
-include '../inc/layout/footer.php';
-?>
-<script src="../js/editar_platos.js"></script>
+<?php $page_scripts = ['../js/editar_platos.js']; ?>
+<?php include '../inc/layout/footer.php'; ?>

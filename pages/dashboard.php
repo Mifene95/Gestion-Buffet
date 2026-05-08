@@ -12,7 +12,7 @@ $total_usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
 
 // Consulta posiciones por mesa
 $stmt_mesas = $pdo->prepare("
-    SELECT 
+    SELECT
         m.id,
         m.nombre,
         m.posiciones_totales,
@@ -57,13 +57,26 @@ $stmt_alergenos_top = $pdo->prepare("
 $stmt_alergenos_top->execute();
 $alergenos_top = $stmt_alergenos_top->fetchAll(PDO::FETCH_ASSOC);
 
+$page_title = 'Panel de Control';
+
 include '../inc/layout/header.php';
 include '../inc/layout/sidebar.php';
 ?>
 
 <div class="content-wrapper">
     <section class="content-header">
-        <h1>Panel de Control</h1>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><?= htmlspecialchars($page_title) ?></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item active"><i class="fas fa-home"></i> Inicio</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="content">
@@ -187,19 +200,14 @@ include '../inc/layout/sidebar.php';
                 </div>
             </div>
         </div>
-</div>
-</div>
-</div>
-</div>
-</section>
+    </section>
+
+    <script>
+        const mesasData = <?php echo json_encode($mesas); ?>;
+        const cambiosData = <?php echo json_encode($cambios_por_dia); ?>;
+        const alergenos_data = <?php echo json_encode($alergenos_top); ?>;
+    </script>
 </div>
 
-<script>
-    const mesasData = <?php echo json_encode($mesas); ?>;
-    const cambiosData = <?php echo json_encode($cambios_por_dia); ?>;
-    const alergenos_data = <?php echo json_encode($alergenos_top); ?>;
-</script>
-
+<?php $page_scripts = ['../js/dashboard.js']; ?>
 <?php include '../inc/layout/footer.php'; ?>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="../js/dashboard.js"></script>

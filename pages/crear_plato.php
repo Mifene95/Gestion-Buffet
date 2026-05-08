@@ -3,6 +3,8 @@ require '../inc/db.php';
 require '../inc/auth_check.php';
 validar_acceso([1, 2]);
 
+$page_title = 'Crear Plato';
+
 include '../inc/layout/header.php';
 include '../inc/layout/sidebar.php';
 
@@ -11,11 +13,16 @@ include '../inc/layout/sidebar.php';
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-
-                <div class="col-12">
-                    <h1 class="text-center">Nuevo Plato</h1>
+                <div class="col-sm-6">
+                    <h1><?= htmlspecialchars($page_title) ?></h1>
                 </div>
-
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="dashboard.php"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="tabla_platos.php">Gestionar Platos</a></li>
+                        <li class="breadcrumb-item active">Crear Plato</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </section>
@@ -161,3 +168,4 @@ include '../inc/layout/sidebar.php';
 
 <?php
 include '../inc/layout/footer.php';
+?>
