@@ -1,1 +1,11 @@
 2026-05-07 13:40:01 - Turno: Desayuno - Actualizadas: 1
+2026-05-07 13:46:00 - Sin turno activo - mostrando logo buffet
+2026-05-07 15:49:01 - Sin turno activo - mostrando logo buffet
+2026-05-07 15:50:00 - Turno: Cena - Sin platos asignados
+2026-05-07 15:59:01 - Sin turno activo - mostrando logo buffet
+2026-05-07 16:03:01 - Turno: Desayuno - Actualizadas: 1
+2026-05-08 07:00:01 - Sin turno activo - mostrando logo buffet
+2026-05-08 07:10:01 - Turno: Desayuno - Actualizadas: 1
+2026-05-08 07:56:01 - Sin turno activo - mostrando logo buffet
+2026-05-08 08:00:00 - Turno: Comida - Actualizadas: 1
+2026-05-08 08:14:00 - Turno: Desayuno - Actualizadas: 1
