@@ -1,14 +1,35 @@
 <?php
 require '../inc/auth_check.php';
-validar_acceso([1]); // Solo admin
+validar_acceso([1]);
 require "../inc/db.php";
 
-// Traer turnos con horarios
-$stmt = $pdo->query('SELECT id, nombre, hora_inicio, hora_fin FROM turnos ORDER BY id');
+$stmt = $pdo->query('SELECT id, nombre FROM turnos ORDER BY id');
 $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$page_title = 'Configuración';
+$stmt2 = $pdo->query('SELECT turno_id, dia_semana, hora_inicio, hora_fin FROM turnos_horarios');
+$horarios_raw = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
+$horarios = [];
+foreach ($horarios_raw as $row) {
+    $horarios[$row['dia_semana']][$row['turno_id']] = [
+        'hora_inicio' => substr($row['hora_inicio'], 0, 5),
+        'hora_fin'    => substr($row['hora_fin'], 0, 5),
+    ];
+}
+
+$dias = [
+    1 => 'Lunes',
+    2 => 'Martes',
+    3 => 'Miércoles',
+    4 => 'Jueves',
+    5 => 'Viernes',
+    6 => 'Sábado',
+    0 => 'Domingo',
+];
+
+$iconos_turno = [1 => 'fa-sun text-warning', 2 => 'fa-utensils text-success', 3 => 'fa-moon text-primary'];
+
+$page_title = 'Configuración';
 include "../inc/layout/header.php";
 include "../inc/layout/sidebar.php";
 ?>
@@ -34,22 +55,40 @@ include "../inc/layout/sidebar.php";
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Horarios de Turnos</h3>
+                    <h3 class="card-title">Horarios de Turnos por Día</h3>
                 </div>
                 <div class="card-body">
-                    <form id="formConfiguracion">
-                        <?php foreach ($turnos as $turno): ?>
+                    <ul class="nav nav-tabs mb-3" id="tabsDias" role="tablist">
+                        <?php $primero = true; foreach ($dias as $dia_num => $dia_nombre): ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= $primero ? 'active' : '' ?>"
+                               id="tab-dia-<?= $dia_num ?>-tab"
+                               data-toggle="tab"
+                               href="#tab-dia-<?= $dia_num ?>"
+                               role="tab">
+                                <?= $dia_nombre ?>
+                            </a>
+                        </li>
+                        <?php $primero = false; endforeach; ?>
+                    </ul>
+
+                    <div class="tab-content" id="tabsDiasContent">
+                        <?php $primero = true; foreach ($dias as $dia_num => $dia_nombre): ?>
+                        <div class="tab-pane fade <?= $primero ? 'show active' : '' ?>"
+                             id="tab-dia-<?= $dia_num ?>"
+                             role="tabpanel">
+
+                            <?php foreach ($turnos as $turno): ?>
+                            <?php
+                                $hi = $horarios[$dia_num][$turno['id']]['hora_inicio'] ?? '00:00';
+                                $hf = $horarios[$dia_num][$turno['id']]['hora_fin']    ?? '00:00';
+                                $icono = $iconos_turno[$turno['id']] ?? 'fa-clock text-secondary';
+                            ?>
                             <div class="card mb-3">
                                 <div class="card-header">
                                     <h5 class="mb-0">
-                                        <?php if ($turno['id'] == 1): ?>
-                                            <i class="fas fa-sun mr-2 text-warning"></i>
-                                        <?php elseif ($turno['id'] == 2): ?>
-                                            <i class="fas fa-utensils mr-2 text-success"></i>
-                                        <?php else: ?>
-                                            <i class="fas fa-moon mr-2 text-primary"></i>
-                                        <?php endif; ?>
-                                        <?= $turno['nombre'] ?>
+                                        <i class="fas <?= $icono ?> mr-2"></i>
+                                        <?= htmlspecialchars($turno['nombre']) ?>
                                     </h5>
                                 </div>
                                 <div class="card-body">
@@ -58,31 +97,37 @@ include "../inc/layout/sidebar.php";
                                             <div class="form-group">
                                                 <label>Hora inicio</label>
                                                 <input type="time"
-                                                    class="form-control hora-inicio"
-                                                    data-turno-id="<?= $turno['id'] ?>"
-                                                    value="<?= substr($turno['hora_inicio'], 0, 5) ?>">
+                                                       class="form-control hora-inicio"
+                                                       data-turno-id="<?= $turno['id'] ?>"
+                                                       data-dia="<?= $dia_num ?>"
+                                                       value="<?= $hi ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Hora fin</label>
                                                 <input type="time"
-                                                    class="form-control hora-fin"
-                                                    data-turno-id="<?= $turno['id'] ?>"
-                                                    value="<?= substr($turno['hora_fin'], 0, 5) ?>">
+                                                       class="form-control hora-fin"
+                                                       data-turno-id="<?= $turno['id'] ?>"
+                                                       data-dia="<?= $dia_num ?>"
+                                                       value="<?= $hf ?>">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
 
-                        <div class="text-right">
-                            <button type="button" class="btn btn-success" id="btnGuardarConfig">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
+                            <div class="text-right">
+                                <button type="button"
+                                        class="btn btn-success btn-guardar-dia"
+                                        data-dia="<?= $dia_num ?>">
+                                    <i class="fas fa-save"></i> Guardar <?= $dia_nombre ?>
+                                </button>
+                            </div>
                         </div>
-                    </form>
+                        <?php $primero = false; endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>

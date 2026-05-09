@@ -1,24 +1,25 @@
-$(document).on('click', '#btnGuardarConfig', function() {
-    // Recoger todos los horarios
+$(document).on('click', '.btn-guardar-dia', function () {
+    const dia = $(this).data('dia');
+    const tab = $('#tab-dia-' + dia);
     let turnos = {};
 
-    $('.hora-inicio').each(function() {
-        const turno_id = $(this).data('turno-id');
-        if (!turnos[turno_id]) turnos[turno_id] = {};
-        turnos[turno_id]['hora_inicio'] = $(this).val();
+    tab.find('.hora-inicio').each(function () {
+        const tid = $(this).data('turno-id');
+        if (!turnos[tid]) turnos[tid] = {};
+        turnos[tid]['hora_inicio'] = $(this).val();
     });
 
-    $('.hora-fin').each(function() {
-        const turno_id = $(this).data('turno-id');
-        if (!turnos[turno_id]) turnos[turno_id] = {};
-        turnos[turno_id]['hora_fin'] = $(this).val();
+    tab.find('.hora-fin').each(function () {
+        const tid = $(this).data('turno-id');
+        if (!turnos[tid]) turnos[tid] = {};
+        turnos[tid]['hora_fin'] = $(this).val();
     });
 
     $.ajax({
         url: '../inc/guardar_configuracion.php',
         method: 'POST',
-        data: { turnos: turnos },
-        success: function(respuesta) {
+        data: { dia_semana: dia, turnos: turnos },
+        success: function (respuesta) {
             if (respuesta.trim() === 'ok') {
                 Swal.fire('¡Guardado!', 'Horarios actualizados correctamente', 'success');
             } else {

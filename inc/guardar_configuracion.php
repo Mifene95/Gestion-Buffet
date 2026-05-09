@@ -3,24 +3,27 @@ require 'db.php';
 require 'auth_check.php';
 validar_acceso([1]);
 
-$turnos = $_POST['turnos'] ?? [];
+$dia_semana = isset($_POST['dia_semana']) ? (int)$_POST['dia_semana'] : null;
+$turnos     = $_POST['turnos'] ?? [];
 
-if (empty($turnos)) {
-    echo 'Error: no hay datos';
+if ($dia_semana === null || !in_array($dia_semana, [0,1,2,3,4,5,6], true) || empty($turnos)) {
+    echo 'Error: datos inválidos';
     exit();
 }
 
+$stmt = $pdo->prepare('
+    UPDATE turnos_horarios
+    SET hora_inicio = ?, hora_fin = ?
+    WHERE turno_id = ? AND dia_semana = ?
+');
+
 foreach ($turnos as $turno_id => $horario) {
-    $stmt = $pdo->prepare('UPDATE turnos SET hora_inicio = ?, hora_fin = ? WHERE id = ?');
     $stmt->execute([
         $horario['hora_inicio'],
         $horario['hora_fin'],
-        $turno_id
+        (int)$turno_id,
+        $dia_semana,
     ]);
 }
-
-// Actualizar el CRON con los nuevos horarios
-require 'actualizar_cron.php';
-
 
 echo 'ok';

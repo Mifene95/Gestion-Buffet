@@ -4,11 +4,18 @@ require __DIR__ . '/zkong_auth.php';
 require __DIR__ . '/zkong_api.php';
 
 $hora_actual = date('H:i:s');
-$hora_minuto = date('H:i');
+$dia_semana  = (int)date('w');
+$dias_es     = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+$dia_nombre  = $dias_es[$dia_semana];
 
-// Buscar turno activo ahora
-$stmt = $pdo->prepare('SELECT id, nombre FROM turnos WHERE hora_inicio <= ? AND hora_fin >= ?');
-$stmt->execute([$hora_actual, $hora_actual]);
+// Buscar turno activo ahora para el dia de la semana actual
+$stmt = $pdo->prepare('
+    SELECT t.id, t.nombre
+    FROM turnos_horarios th
+    JOIN turnos t ON t.id = th.turno_id
+    WHERE th.dia_semana = ? AND th.hora_inicio <= ? AND th.hora_fin >= ?
+');
+$stmt->execute([$dia_semana, $hora_actual, $hora_actual]);
 $turno_actual = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Leer el último turno guardado
@@ -55,7 +62,7 @@ if (!$turno_actual) {
         curl_close($ch);
     }
 
-    $log = date('Y-m-d H:i:s') . " - Sin turno activo - mostrando logo buffet\n";
+    $log = date('Y-m-d H:i:s') . " - [{$dia_nombre}] Sin turno activo - mostrando logo buffet\n";
     file_put_contents(__DIR__ . '/cron_log.txt', $log, FILE_APPEND);
     exit();
 }
@@ -76,7 +83,7 @@ $stmt->execute([$turno_actual['id']]);
 $platos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (empty($platos)) {
-    $log = date('Y-m-d H:i:s') . " - Turno: " . $turno_actual['nombre'] . " - Sin platos asignados\n";
+    $log = date('Y-m-d H:i:s') . " - [{$dia_nombre}] Turno: " . $turno_actual['nombre'] . " - Sin platos asignados\n";
     file_put_contents(__DIR__ . '/cron_log.txt', $log, FILE_APPEND);
     exit();
 }
@@ -118,5 +125,5 @@ foreach ($platos as $plato) {
     $actualizadas++;
 }
 
-$log = date('Y-m-d H:i:s') . " - Turno: " . $turno_actual['nombre'] . " - Actualizadas: {$actualizadas}\n";
+$log = date('Y-m-d H:i:s') . " - [{$dia_nombre}] Turno: " . $turno_actual['nombre'] . " - Actualizadas: {$actualizadas}\n";
 file_put_contents(__DIR__ . '/cron_log.txt', $log, FILE_APPEND);
